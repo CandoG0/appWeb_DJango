@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Agenda - Tareas Pendientes{% endblock title %}
+
+{% block extra_css %}
+<link href="{% static 'css/tareasR.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <!-- Encabezado fijo a la izquierda superior -->
+    <h2 class="section-title">
+        <a href="javascript:history.back()" class="back-arrow" title="Regresar">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        Tareas pendientes
+    </h2>
+
+    <!-- Panel de navegacion -->
+    <div class="barra-navegacion">
+        <ul class="nav nav-underline">
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{% url 'miapp:listar_tareas' %}">General</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'miapp:tareas_vencer' %}">Por vencer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'miapp:tareas_pendientes' %}">Pendientes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'miapp:tareas_completadas' %}">Completados</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Boton para crear una nueva tarea -->
+    <div class="btn-crear">
+        <a class="btn btn-primary" href="{% url 'miapp:crear_tarea' %}" role="button">
+            <i class="bi bi-plus-circle me-2"></i>Nueva tarea
+        </a>
+    </div>
+
+    <!-- Grid de tarjetas compactas -->
+    <div class="tareas-grid">
+        {% for tarea in tareas %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ tarea.nombre_tarea }}</h5>
+                {% if tarea.descripcion_tarea %}
+                <p class="card-text">{{ tarea.descripcion_tarea }}</p>
+                {% endif %}
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <i class="bi bi-book me-2"></i>{{ tarea.asignatura }}
+                    </li>
+                    <li class="list-group-item">
+                        <i class="bi bi-calendar me-2"></i>
+                        Vence: {{ tarea.fecha_entrega|date:"d/m/Y" }}
+                    </li>
+                </ul>
+            </div>
+            <div class="card-footer">
+                <a href="#" class="card-link ver-link">
+                    <i class="bi bi-eye me-1"></i>Ver
+                </a>
+                <a href="{% url 'miapp:marcar_completada' tarea.id %}" class="card-link success-link">
+                    <i class="bi bi-check-circle me-1"></i>Hecho
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="bi bi-calendar-check display-1 text-muted"></i>
+            <h3 class="mt-3 text-muted">No hay tareas pendientes</h3>
+            <p class="text-muted">No tienes tareas programadas para los próximos días.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<script>
+    // Script al scrollear se oculta el header
+    let lastScrollY = window.scrollY;
+    const sectionTitle = document.querySelector('.section-title');
+    let ticking = false;
+
+    function updateHeader() {
+        if (window.scrollY > lastScrollY && window.scrollY > 100) {
+            sectionTitle.classList.add('hidden');
+        } else {
+            sectionTitle.classList.remove('hidden');
+        }
+        lastScrollY = window.scrollY;
+        ticking = false;
+    }
+
+    function onScroll() {
+        if (!ticking) {
+            requestAnimationFrame(updateHeader);
+            ticking = true;
+        }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Mostrar header al hacer hover cerca del top
+    document.addEventListener('mousemove', (e) => {
+        if (e.clientY < 100 && sectionTitle.classList.contains('hidden')) {
+            sectionTitle.classList.remove('hidden');
+        }
+    });
+
+    // Función para marcar como completada con feedback visual
+    document.addEventListener('DOMContentLoaded', function () {
+        const botonesHecho = document.querySelectorAll('.success-link');
+
+        botonesHecho.forEach(boton => {
+            boton.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const card = this.closest('.card');
+                const url = this.href;
+
+                // Feedback visual inmediato
+                card.classList.add('checking');
+                this.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Procesando...';
+
+                // Hacer la petición
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Éxito - animar y remover la tarjeta
+                            card.classList.add('success-animation');
+                            setTimeout(() => {
+                                card.style.opacity = '0';
+                                setTimeout(() => {
+                                    card.remove();
+
+                                    // Actualizar contadores si existen
+                                    actualizarContadores();
+
+                                }, 300);
+                            }, 500);
+                        } else {
+                            // Error - recargar la página
+                            window.location.reload();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        window.location.reload();
+                    });
+            });
+        });
+
+        function actualizarContadores() {
+            // Actualizar contadores de estadísticas si existen
+            const contadorTotal = document.querySelector('[data-contador="total"]');
+            if (contadorTotal) {
+                const nuevoTotal = parseInt(contadorTotal.textContent) - 1;
+                contadorTotal.textContent = nuevoTotal;
+            }
+        }
+    });
+</script>
+{% endblock %}

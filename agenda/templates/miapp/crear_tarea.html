@@ -1,0 +1,112 @@
+{% extends "forms.html" %}
+{% load static %}
+
+{% block title %}Agenda - Crear tarea{% endblock title %}
+
+{% block extra_css %}
+<link href="{% static 'css/crearTarea.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h2 class="section-title">
+        <a href="javascript:history.back()" class="back-arrow" title="Regresar">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        Crear Nueva Tarea
+    </h2>
+
+    <div class="form-container">
+        <form action="" method="post">
+            {% csrf_token %}
+
+            <p class="form-intro">Por favor registra los datos de la tarea</p>
+
+            <!-- Mostrar mensajes -->
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <!-- Mostrar errores del formulario -->
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                {{ error }}
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="mb-3">
+                <label for="id_nombre_tarea" class="form-label">Nombre de la tarea</label>
+                <input type="text" class="form-control" id="id_nombre_tarea" name="nombre_tarea"
+                    placeholder="Investigación acerca de..." value="{{ form.nombre_tarea.value|default:'' }}" required>
+                {% if form.nombre_tarea.errors %}
+                <div class="text-danger small">{{ form.nombre_tarea.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_descripcion_tarea" class="form-label">Descripción de la tarea</label>
+                <textarea class="form-control" id="id_descripcion_tarea" name="descripcion_tarea" rows="3"
+                    placeholder="Buscar información acerca de...">{{ form.descripcion_tarea.value|default:'' }}</textarea>
+                {% if form.descripcion_tarea.errors %}
+                <div class="text-danger small">{{ form.descripcion_tarea.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_asignatura" class="form-label">Asignatura</label>
+                <input type="text" class="form-control" id="id_asignatura" name="asignatura"
+                    placeholder="Programación Web" value="{{ form.asignatura.value|default:'' }}">
+                {% if form.asignatura.errors %}
+                <div class="text-danger small">{{ form.asignatura.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_fecha_entrega" class="form-label">Fecha de entrega</label>
+                <input type="date" class="form-control" id="id_fecha_entrega" name="fecha_entrega"
+                    value="{{ form.fecha_entrega.value|default:'' }}" min="{{ today }}" required>
+                {% if form.fecha_entrega.errors %}
+                <div class="text-danger small">{{ form.fecha_entrega.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_prioridad" class="form-label">Prioridad</label>
+                <select class="form-select" id="id_prioridad" name="prioridad" required>
+                    <option value="">Seleccionar prioridad</option>
+                    <option value="alt">Alta</option>
+                    <option value="med">Media</option>
+                    <option value="baj">Baja</option>
+                </select>
+                {% if form.prioridad.errors %}
+                <div class="text-danger small">{{ form.prioridad.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_modalidad" class="form-label">Modalidad</label>
+                <select class="form-select" id="id_modalidad" name="modalidad" required>
+                    <option value="">Seleccionar modalidad</option>
+                    <option value="ind">Individual</option>
+                    <option value="grup">En Grupo</option>
+                </select>
+                {% if form.modalidad.errors %}
+                <div class="text-danger small">{{ form.modalidad.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary-custom" type="submit">
+                    <i class="bi bi-check-circle me-2"></i>Registrar tarea
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

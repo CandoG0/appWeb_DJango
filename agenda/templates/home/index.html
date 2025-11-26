@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Agenda{% endblock title %}
+
+{% block extra_css %}
+<link href="{% static 'css/inicio.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <!-- Título de sección en esquina superior izquierda -->
+    <h2 class="section-title">Inicio</h2>
+    <!-- Título principal -->
+    <h1 class="welcome-title">Hola "usuario"</h1>
+    <h2 class="welcome-subtitle">¿Cuáles son los pendientes de hoy?</h2>
+    
+    <!-- Botones -->
+    <div class="buttons-container">
+        <!-- El url 'miapp:crear_tarea' viene de la carpeta miapp urls.py apartado name-->
+        <a href="{% url 'miapp:crear_tarea' %}" class="btn-primary-custom">
+            Crear una nueva tarea
+            <i class="bi bi-arrow-right-circle"></i>
+        </a>
+        <a href="{% url 'miapp:listar_tareas' %}" class="btn-secondary-custom">
+            Revisar tareas pendientes
+            <i class="bi bi-arrow-right-circle"></i>
+        </a>
+    </div>
+    
+    <!-- Mensaje de tareas pendientes -->
+    <h5 class="tasks-message">Tienes 2 tareas pendientes</h5>
+</div>
+{% endblock content %}
