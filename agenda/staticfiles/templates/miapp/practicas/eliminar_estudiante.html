@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Eliminar Estudiante{% endblock %}
+{% block content %}
+<h2>¿Estas seguro de que deseas eliminar al estudiante?</h2>
+<p>Nombre: {{ estudiante.nombre }}</p>
+<p>Apellido Paterno: {{ estudiante.appat }}</p>
+<p>Apellido Paterno: {{ estudiante.apmat }}</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Sí, eliminar</button>
+    <a href="{% url 'miapp:lista_estudiantes' %}">Cancelar</a>
+</form>
+{% endblock %}

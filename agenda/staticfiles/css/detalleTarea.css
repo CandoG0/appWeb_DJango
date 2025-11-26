@@ -1,0 +1,241 @@
+.section-title {
+    position: fixed;
+    top: 2rem;
+    left: 320px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #374375;
+    margin: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 0.4s ease;
+}
+
+.section-title.hidden {
+    transform: translateY(-100px); /* Se oculta hacia arriba */
+}
+
+.back-arrow {
+    color: #374375;
+    text-decoration: none;
+    font-size: 1.3rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.back-arrow:hover {
+    color: #895159;
+    transform: translateX(-3px);
+}
+
+.hero-section {
+    margin-top: 40px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #374375;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+/* Contenedor principal de información */
+.contenedor-detalles {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 3rem;
+    align-items: start;
+}
+
+/* Estilos para la información de la tarea */
+.info-tarea {
+    background-color: #FFFCF5;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.item-info:last-child {
+    border-bottom: none;
+}
+
+.item-info .icono {
+    width: 40px;
+    height: 40px;
+    background-color: #DFAEA1;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.item-info .icono i {
+    color: #374375;
+    font-size: 1.2rem;
+}
+
+.contenido-info h4 {
+    color: #374375;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    font-size: 1rem;
+}
+
+.contenido-info p {
+    color: #6c757d;
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* Descripción con estilo especial */
+.descripcion-item {
+    align-items: flex-start;
+}
+
+.descripcion-item .contenido-info p {
+    line-height: 1.6;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+/* Estados con colores */
+.estado-nuevo {
+    color: #DFAEA1;
+    font-weight: 600;
+}
+
+.estado-progreso {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+.estado-finalizado {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.estado-urgente {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+/* Panel de botones lateral */
+.panel-botones {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: sticky;
+    top: 100px;
+}
+
+.btn-accion {
+    border: none;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-finalizar {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-finalizar:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.btn-editar {
+    background-color: #DFAEA1;
+    color: #374375;
+}
+
+.btn-editar:hover {
+    background-color: #f5ad99;
+    transform: translateY(-2px);
+}
+
+.btn-eliminar {
+    background-color: #895159;
+    color: white;
+}
+
+.btn-eliminar:hover {
+    background-color: #76444c;
+    transform: translateY(-2px);
+}
+
+/* Modal personalizado */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background-color: #374375;
+    color: white;
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    padding: 1.5rem;
+}
+
+.modal-title {
+    font-weight: 600;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #e9ecef;
+    padding: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-section {
+        margin-top: 100px;
+        padding: 1rem;
+    }
+
+    .contenedor-detalles {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .panel-botones {
+        position: static;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .btn-accion {
+        flex: 1;
+        padding: 0.75rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+}

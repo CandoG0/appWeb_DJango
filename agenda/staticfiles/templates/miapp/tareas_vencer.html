@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Agenda - Tareas{% endblock title %}
+
+{% block extra_css %}
+<link href="{% static 'css/tareas.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <!-- Encabezado fijo a la izquierda superior -->
+    <h2 class="section-title">
+        <a href="javascript:history.back()" class="back-arrow" title="Regresar">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        Tareas por vencer
+        <!-- <small class="text-muted ms-2">({{ tareas_hoy }} hoy, {{ tareas_manana }} mañana)</small> -->
+    </h2>
+
+    <!-- Panel de navegacion -->
+    <div class="barra-navegacion">
+        <ul class="nav nav-underline">
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{% url 'miapp:listar_tareas' %}">General</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'miapp:tareas_vencer' %}">Por vencer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'miapp:tareas_pendientes' %}">Pendientes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'miapp:tareas_completadas' %}">Completados</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Boton para crear una nueva tarea -->
+    <div class="btn-crear">
+        <a class="btn btn-primary" href="{% url 'miapp:crear_tarea' %}" role="button">
+            <i class="bi bi-plus-circle me-2"></i>Nueva tarea
+        </a>
+    </div>
+
+    <!-- Tabla para mostrar las tareas -->
+    <div class="table-container">
+        {% if tareas %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Tarea</th>
+                    <th scope="col">Vence</th>
+                    <th scope="col">Asignatura</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tarea in tareas%}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td class="tarea-texto">
+                        <strong>{{ tarea.nombre_tarea }}</strong>
+                    </td>
+                    <td>
+                        {% now "Y-m-d" as today %}
+                        {% if tarea.fecha_entrega|date:"Y-m-d" == today %}
+                            <span class="badge bg-danger">HOY</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">MAÑANA</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ tarea.asignatura }}</td>
+                    <td class="estado-nuevo">
+                        {% if tarea.estatus.nombre == "nue" %}
+                            <span class="estado-nuevo">Nuevo</span>
+                        {% elif tarea.estatus.nombre == "pro" %}
+                            <span class="estado-pendiente">En Proceso</span>
+                        {% elif tarea.estatus.nombre == "fin" %}
+                            <span class="estado-completado">Completado</span>
+                        {% else %}
+                            <span class="estado-nuevo">{{ tarea.estatus.nombre }}</span>
+                        {% endif %}
+                    </td>
+                    <td> 
+                        <a href="{% url 'miapp:detalle_tarea' %}" class="card-link ver-link">
+                            <i class="bi bi-eye me-1"></i>Ver
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-check-circle display-1 text-success"></i>
+            <h3 class="mt-3 text-muted">¡No hay tareas por vencer!</h3>
+            <p class="text-muted">No tienes tareas que venzan hoy o mañana.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<script>
+    // Script al scrollear se oculta el header
+    let lastScrollY = window.scrollY;
+    const sectionTitle = document.querySelector('.section-title');
+    let ticking = false;
+
+    function updateHeader() {
+        if (window.scrollY > lastScrollY && window.scrollY > 100) {
+            sectionTitle.classList.add('hidden');
+        } else {
+            sectionTitle.classList.remove('hidden');
+        }
+        lastScrollY = window.scrollY;
+        ticking = false;
+    }
+
+    function onScroll() {
+        if (!ticking) {
+            requestAnimationFrame(updateHeader);
+            ticking = true;
+        }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Mostrar header al hacer hover cerca del top
+    document.addEventListener('mousemove', (e) => {
+        if (e.clientY < 100 && sectionTitle.classList.contains('hidden')) {
+            sectionTitle.classList.remove('hidden');
+        }
+    });
+</script>
+{% endblock %}

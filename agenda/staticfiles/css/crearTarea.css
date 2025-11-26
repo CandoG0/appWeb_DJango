@@ -1,0 +1,185 @@
+.section-title {
+    position: fixed;
+    top: 2rem;
+    left: 50px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #374375;
+    margin: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 0.4s ease;
+}
+
+.section-title.hidden {
+    transform: translateY(-100px);
+    /* Se oculta hacia arriba */
+}
+
+.back-arrow {
+    color: #374375;
+    text-decoration: none;
+    font-size: 1.3rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.back-arrow:hover {
+    color: #895159;
+    transform: translateX(-3px);
+}
+
+.hero-section {
+    /* Para que no quede detrás del título fijo */
+    margin-top: 50px;
+    text-align: center;
+}
+
+/* Formulario mejorado */
+.form-container {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+form {
+    border-radius: 12px;
+    text-align: left;
+    background-color: #374375;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+form:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.form-label,
+.form-intro {
+    color: #FFFCF5;
+    font-weight: 500;
+}
+
+.form-intro {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.form-control {
+    background-color: #DFAEA1;
+    border: 0;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    color: #374375;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    background-color: #f5ad99;
+    color: #374375;
+    box-shadow: 0 0 0 3px rgba(223, 174, 161, 0.3);
+}
+
+.form-control::placeholder {
+    color: #8B4513;
+    opacity: 0.7;
+}
+
+.form-select {
+    background-color: #DFAEA1;
+    border: 0;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    color: #374375;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.form-select:focus {
+    background-color: #f5ad99;
+    color: #374375;
+    box-shadow: 0 0 0 3px rgba(223, 174, 161, 0.3);
+}
+
+.mb-3 {
+    margin-bottom: 1.5rem;
+}
+
+/* Botón mejorado */
+.btn-primary-custom {
+    color: #FFFCF5;
+    background-color: #895159;
+    border: none;
+    padding: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.btn-primary-custom:hover {
+    color: #ffffff;
+    background-color: #703d45;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary-custom:active {
+    transform: translateY(0);
+}
+
+/* Estilos para textarea */
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Placeholders con mejor contraste */
+.form-control::placeholder {
+    color: #8B4513;
+    opacity: 0.7;
+}
+
+/* Manejo de errores */
+.text-danger {
+    color: #ff6b6b !important;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.alert-danger {
+    background-color: #ff6b6b;
+    color: white;
+    padding: 0.75rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    border: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .section-title {
+        left: 20px;
+    }
+
+    .hero-section {
+        margin-top: 100px;
+        padding: 1rem;
+    }
+
+    form {
+        padding: 1.5rem;
+        margin: 0 1rem;
+    }
+}

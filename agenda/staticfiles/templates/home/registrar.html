@@ -1,0 +1,124 @@
+{% extends "forms.html" %}
+{% load static %}
+
+{% block title %}Agenda - Registro{% endblock title %}
+
+{% block extra_css %}
+<link href="{% static 'css/registro.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <!-- Encabezado corregido -->
+    <h2 class="section-title">
+        <a href="javascript:history.back()" class="back-arrow" title="Regresar">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        Crear Nueva Cuenta
+    </h2>
+
+    <!-- Formulario de registro -->
+    <div class="form-container">
+
+        <form action="" method="post">
+            {% csrf_token %}
+
+            <p class="form-intro">Por favor, ingresa tus datos</p>
+
+            <!-- MOSTRAR ERRORES GENERALES -->
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                {{ error }}
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="mb-3">
+                <label for="id_nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="id_nombre" name="nombre" placeholder="Tu nombre"
+                    value="{{ form.nombre.value|default:'' }}" required>
+                {% if form.nombre.errors %}
+                <div class="text-danger small">{{ form.nombre.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_appat" class="form-label">Apellido Paterno</label>
+                <input type="text" class="form-control" id="id_appat" name="appat" placeholder="Apellido paterno"
+                    value="{{ form.appat.value|default:'' }}" required>
+                {% if form.appat.errors %}
+                <div class="text-danger small">{{ form.appat.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_apmat" class="form-label">Apellido Materno</label>
+                <input type="text" class="form-control" id="id_apmat" name="apmat" placeholder="Apellido materno"
+                    value="{{ form.apmat.value|default:'' }}" required>
+                {% if form.apmat.errors %}
+                <div class="text-danger small">{{ form.apmat.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_nombre_usuario" class="form-label">Nombre de usuario</label>
+                <input type="text" class="form-control" id="id_nombre_usuario" name="nombre_usuario"
+                    placeholder="Nombre de usuario único" value="{{ form.nombre_usuario.value|default:'' }}" required>
+                {% if form.nombre_usuario.errors %}
+                <div class="text-danger small">{{ form.nombre_usuario.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_fecha_nacimiento" class="form-label">Fecha de nacimiento</label>
+                <input type="date" class="form-control" id="id_fecha_nacimiento" name="fecha_nacimiento"
+                    value="{{ form.fecha_nacimiento.value|default:'' }}" required>
+                {% if form.fecha_nacimiento.errors %}
+                <div class="text-danger small">{{ form.fecha_nacimiento.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_correo" class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" id="id_correo" name="correo" placeholder="tu@ejemplo.com"
+                    value="{{ form.correo.value|default:'' }}" required>
+                {% if form.correo.errors %}
+                <div class="text-danger small">{{ form.correo.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3 password-field">
+                <label for="id_contrasenia" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="id_contrasenia" name="contrasenia"
+                    placeholder="Crea una contraseña segura" required>
+                {% if form.contrasenia.errors %}
+                <div class="text-danger small">{{ form.contrasenia.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3 password-field">
+                <label for="id_confirmar_contrasenia" class="form-label">Confirmar contraseña</label>
+                <input type="password" class="form-control" id="id_confirmar_contrasenia" name="confirmar_contrasenia"
+                    placeholder="Repite tu contraseña" required>
+                {% if form.confirmar_contrasenia.errors %}
+                <div class="text-danger small">{{ form.confirmar_contrasenia.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary-custom" type="submit">
+                    <i class="bi bi-person-plus me-2"></i>Crear Cuenta
+                </button>
+            </div>
+
+            <div class="text-center mt-3">
+                <small style="color: #DFAEA1;">
+                    ¿Ya tienes cuenta? <a href="{% url 'login' %}"
+                        style="color: #FFFCF5; text-decoration: underline;">Inicia sesión aquí</a>
+                </small>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
