@@ -12,9 +12,17 @@
     <!-- Título de sección en esquina superior izquierda -->
     <h2 class="section-title">Inicio</h2>
     <!-- Título principal -->
-    <h1 class="welcome-title">Hola "usuario"</h1>
-    <h2 class="welcome-subtitle">¿Cuáles son los pendientes de hoy?</h2>
+    <h1 class="welcome-title">
+        Hola,
+        {% if usuario_actual %}
+            {{ usuario_actual.nombre|default:"Usuario" }}
+        {% else %}
+            Visitante
+        {% endif %}
+    </h1>
     
+    <h2 class="welcome-subtitle">¿Cuáles son los pendientes de hoy?</h2>
+
     <!-- Botones -->
     <div class="buttons-container">
         <!-- El url 'miapp:crear_tarea' viene de la carpeta miapp urls.py apartado name-->
@@ -27,8 +35,25 @@
             <i class="bi bi-arrow-right-circle"></i>
         </a>
     </div>
-    
+
     <!-- Mensaje de tareas pendientes -->
-    <h5 class="tasks-message">Tienes 2 tareas pendientes</h5>
+    <!-- Mensaje de tareas pendientes -->
+    <h5 class="tasks-message">
+        {% if usuario_actual.tareas_pendientes_count == 0 %}
+            ¡No hay tareas pendientes!
+        {% elif usuario_actual.tareas_pendientes_count == 1 %}
+        Tienes 1 tarea pendiente
+        {% else %}
+            Tienes {{ usuario_actual.tareas_pendientes_count }} tareas pendientes
+        {% endif %}
+    </h5>
+    
+    <!-- Con más detalle -->
+    <!--     <h5 class="tasks-message">
+        Tienes
+        <span>{{ usuario_actual.tareas_por_vencer.vencidas }}</span> vencidas,
+        <span>{{ usuario_actual.tareas_por_vencer.hoy }}</span> para hoy,
+        <span>{{ usuario_actual.tareas_por_vencer.manana }}</span> para mañana
+    </h5> -->
 </div>
 {% endblock content %}

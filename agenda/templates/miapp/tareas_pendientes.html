@@ -62,7 +62,7 @@
                 </ul>
             </div>
             <div class="card-footer">
-                <a href="#" class="card-link ver-link">
+                <a href="{% url 'miapp:detalle_tarea' tarea.id %}" class="card-link ver-link">
                     <i class="bi bi-eye me-1"></i>Ver
                 </a>
                 <a href="{% url 'miapp:marcar_completada' tarea.id %}" class="card-link success-link">

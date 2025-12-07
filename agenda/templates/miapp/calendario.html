@@ -5,6 +5,7 @@
 
 {% block extra_css %}
 <link href="{% static 'css/calendario.css' %}" rel="stylesheet">
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
 {% endblock %}
 
 {% block content %}
@@ -23,7 +24,7 @@
             <i class="bi bi-chevron-left"></i>
         </button>
 
-        <h3 class="month-title" id="monthTitle">Febrero 2024</h3>
+        <h3 class="month-title" id="monthTitle">Cargando...</h3>
 
         <button class="nav-btn" id="nextMonth" title="Mes siguiente">
             <i class="bi bi-chevron-right"></i>
@@ -34,79 +35,84 @@
     <div id="calendar"></div>
 </div>
 
-<!-- Modal para ver informacion de la tarea Tarea -->
-<div class="modal fade" id="modalFinalizar" tabindex="-1" aria-labelledby="modalFinalizarLabel" aria-hidden="true">
+<!-- Modal para ver información detallada de una tarea -->
+<div class="modal fade" id="modalTareaDetalle" tabindex="-1" aria-labelledby="modalTareaDetalleLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalFinalizarLabel">
-                    <i class="bi bi-check-circle me-2"></i>Titulo de la tarea
+                <h5 class="modal-title" id="modalTareaDetalleLabel">
+                    <i class="bi bi-card-checklist me-2"></i>
+                    Detalle de Tarea
                 </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="mb-3">
-                    <ul>
-                        <li>Materia: Titulo de la materia</li>
-                        <li>Vence: Fecha de vencimiento</li>
-                        <li>Modalidad: Individual o En equipo</li>
-                        <li>Estado: Nuevo</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hecho</button>
-                <button type="button" class="btn btn-success">Editar</button>
-            </div>
-        </div>
-    </div>
-</div>
+                <!-- Título de la tarea -->
+                <h5 id="tareaTitulo" class="mb-4 text-center" style="color: #374375;"></h5>
 
-<!-- Modal para ver tareas del día -->
-<div class="modal fade" id="modalTareas" tabindex="-1" aria-labelledby="modalTareasLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTareasLabel">
-                    <i class="bi bi-calendar-check me-2"></i>
-                    <span id="modalFecha">Tareas del día</span>
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="listaTareas">
-                    <!-- Las tareas se cargarán aquí dinámicamente -->
-                    <div class="tarea-item">
-                        <div class="tarea-nombre">Investigación de lenguajes</div>
-                        <div class="tarea-detalle">Programación Web - Vence hoy</div>
+                <div class="tarea-info-simple">
+                    <div class="info-item-simple mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-book me-3" style="color: #374375; min-width: 24px;"></i>
+                            <div>
+                                <div class="text-muted small">Materia</div>
+                                <div id="tareaAsignatura" class="fw-bold"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item-simple mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-calendar-event me-3" style="color: #374375; min-width: 24px;"></i>
+                            <div>
+                                <div class="text-muted small">Fecha de Entrega</div>
+                                <div id="tareaFecha" class="fw-bold"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item-simple mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-people me-3" style="color: #374375; min-width: 24px;"></i>
+                            <div>
+                                <div class="text-muted small">Modalidad</div>
+                                <div id="tareaModalidad" class="fw-bold"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item-simple mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-flag me-3" style="color: #374375; min-width: 24px;"></i>
+                            <div>
+                                <div class="text-muted small">Estado</div>
+                                <div id="tareaEstado" class="fw-bold"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-eye me-1"></i>Ver
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x me-1"></i> Cerrar
                 </button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <a href="#" id="tareaVerLink" class="btn btn-primary">
+                    <i class="bi bi-eye me-1"></i> Ver Tarea
+                </a>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Scripts de FullCalendar -->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/es.js'></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Datos de ejemplo de tareas
-        const tareas = [
-            {
-                title: 'Investigación de lenguajes',
-                start: '2025-11-15',
-                materia: 'Programación Web',
-                descripcion: 'Realizar investigación sobre lenguajes web modernos',
-                estado: 'Pendiente'
-            },
-        ];
-
-        // Inicializar calendario
         const calendarEl = document.getElementById('calendar');
+        
+        // Inicializar calendario
         const calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             locale: 'es',
@@ -115,64 +121,62 @@
                 center: '',
                 right: ''
             },
-            events: tareas.map(tarea => ({
-                title: tarea.title,
-                start: tarea.start,
-                extendedProps: {
-                    materia: tarea.materia,
-                    descripcion: tarea.descripcion,
-                    estado: tarea.estado
-                }
-            })),
-            eventClick: function (info) {
-                const tarea = info.event;
-                const fecha = tarea.start.toLocaleDateString('es-ES');
-
-                document.getElementById('modalFecha').textContent = `Tareas para ${fecha}`;
-                document.getElementById('listaTareas').innerHTML = `
-                <div class="tarea-item">
-                    <div class="tarea-nombre">${tarea.title}</div>
-                    <div class="tarea-detalle">
-                        ${tarea.extendedProps.materia} - ${tarea.extendedProps.estado}
-                    </div>
-                    <div class="tarea-detalle">${tarea.extendedProps.descripcion}</div>
-                </div>
-            `;
-
-                const modal = new bootstrap.Modal(document.getElementById('modalTareas'));
-                modal.show();
-            },
-            dateClick: function (info) {
-                const fecha = info.dateStr;
-                const tareasDelDia = tareas.filter(tarea => tarea.start === fecha);
-
-                document.getElementById('modalFecha').textContent = `Tareas para ${info.date.toLocaleDateString('es-ES')}`;
-
-                if (tareasDelDia.length > 0) {
-                    let html = '';
-                    tareasDelDia.forEach(tarea => {
-                        html += `
-                        <div class="tarea-item">
-                            <div class="tarea-nombre">${tarea.title}</div>
-                            <div class="tarea-detalle">
-                                ${tarea.materia} - ${tarea.estado}
-                            </div>
-                            <div class="tarea-detalle">${tarea.descripcion}</div>
-                        </div>
-                    `;
+            events: function(fetchInfo, successCallback, failureCallback) {
+                // Cargar tareas desde la API
+                fetch('{% url "miapp:tareas_calendario_api" %}')
+                    .then(response => response.json())
+                    .then(data => {
+                        successCallback(data);
+                    })
+                    .catch(error => {
+                        console.error('Error cargando tareas:', error);
+                        failureCallback(error);
                     });
-                    document.getElementById('listaTareas').innerHTML = html;
-                } else {
-                    document.getElementById('listaTareas').innerHTML =
-                        '<p class="text-muted text-center">No hay tareas para este día</p>';
-                }
-
-                const modal = new bootstrap.Modal(document.getElementById('modalTareas'));
-                modal.show();
-            }
-        });
+            },
+            eventClick: function(info) {
+                // Mostrar modal con detalles de la tarea específica
+                mostrarDetalleTarea(info.event);
+            },
+        }); 
 
         calendar.render();
+
+        // Función para mostrar detalles de una tarea
+        function mostrarDetalleTarea(tarea) {
+            // Título
+            document.getElementById('tareaTitulo').textContent = tarea.title;
+            
+            // Información básica
+            document.getElementById('tareaAsignatura').textContent = tarea.extendedProps.asignatura;
+            
+            // Fecha formateada
+            const fecha = new Date(tarea.start);
+            document.getElementById('tareaFecha').textContent = fecha.toLocaleDateString('es-ES', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            document.getElementById('tareaModalidad').textContent = tarea.extendedProps.modalidad;
+            
+            // Estado
+            const estado = tarea.extendedProps.estado || 'nue';
+            let estadoDisplay = tarea.extendedProps.estado_display || 'Nuevo';
+            
+            // Convertir estado a formato legible
+            if (estado === 'nue') estadoDisplay = 'Nuevo';
+            else if (estado === 'pro') estadoDisplay = 'En progreso';
+            else if (estado === 'fin') estadoDisplay = 'Completado';
+            
+            document.getElementById('tareaEstado').textContent = estadoDisplay;
+            
+            document.getElementById('tareaVerLink').href = `/miapp/tarea/${tarea.id}/`;
+            
+            // Mostrar modal
+            const modal = new bootstrap.Modal(document.getElementById('modalTareaDetalle'));
+            modal.show();
+        }
 
         // Actualizar título del mes
         function updateMonthTitle() {
@@ -198,7 +202,7 @@
             updateMonthTitle();
         });
 
-        // Tu script existente para ocultar header
+        // Ocultar header
         let lastScrollY = window.scrollY;
         const sectionTitle = document.querySelector('.section-title');
         let ticking = false;
@@ -226,6 +230,12 @@
             if (e.clientY < 100 && sectionTitle.classList.contains('hidden')) {
                 sectionTitle.classList.remove('hidden');
             }
+        });
+
+        // Inicializar tooltips de Bootstrap
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     });
 </script>

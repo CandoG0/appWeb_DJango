@@ -1,237 +1,321 @@
-.section-title {
-    position: fixed;
-    top: 2rem;
-    left: 320px;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #374375;
-    margin: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: transform 0.4s ease;
-}
-
-.section-title.hidden {
-    transform: translateY(-100px);
-    /* Se oculta hacia arriba */
-}
-
-.back-arrow {
-    color: #374375;
-    text-decoration: none;
-    font-size: 1.3rem;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-}
-
-.back-arrow:hover {
-    color: #895159;
-    transform: translateX(-3px);
-}
-
-.hero-section {
-    margin-top: 50px;
-}
-
-/* Controles del calendario - Versión minimalista */
 .calendar-header {
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    margin-bottom: 1.5rem;   
-    gap: 1.5rem;
-}
-
-.month-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #374375;
-    margin: 0;
-    min-width: 200px;
-    text-align: center;
-}
-
-.nav-btn {
-    background-color: transparent;
-    color: #374375;
-    border: 2px solid #DFAEA1;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-weight: 600;
-    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    position: relative;
 }
 
-.nav-btn:hover {
-    background-color: #DFAEA1;
+.month-title {
+    font-size: 1.8rem;
+    font-weight: 700;
     color: #374375;
-    transform: translateY(-2px);
+    margin: 0;
+    padding: 0 0.5rem;
+    text-align: center;
+    min-width: 200px;
 }
 
-/* FullCalendar personalizado */
+/* Botones de navegación - Solo flechas */
+.nav-btn {
+    background: transparent;
+    border: none;
+    color: #374375;
+    font-size: 1.8rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 0;
+}
+
+.nav-btn i {
+    font-size: 1.8rem;
+    transition: all 0.3s ease;
+}
+
+/* Efecto hover sutil */
+.nav-btn:hover {
+    color: #895159;
+}
+
+.nav-btn:hover i {
+    transform: scale(1.2);
+}
+
+/* Efecto activo/presionado */
+.nav-btn:active i {
+    transform: scale(0.9);
+}
+
+/* Contenedor principal del calendario */
 #calendar {
     background-color: #FFFCF5;
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-height: 590px; /* o la altura que prefieras */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-height: 650px;
     overflow: hidden;
 }
 
+/* Vista de FullCalendar */
 .fc-view-harness {
-    max-height: 700px !important;
+    max-height: 550px !important;
     overflow-y: auto !important;
 }
 
-/* Estilos personalizados para FullCalendar */
-.fc {
-    font-family: inherit;
+/* Días del calendario */
+.fc-daygrid-day {
+    transition: all 0.2s ease;
 }
 
-.fc-header-toolbar {
-    margin-bottom: 1.5em !important;
-}
-
-.fc-toolbar-title {
-    font-size: 1.5rem !important;
-    color: #374375 !important;
-    font-weight: 600 !important;
-}
-
-.fc-button {
-    background-color: #DFAEA1 !important;
-    border: none !important;
-    color: #374375 !important;
-    font-weight: 500 !important;
-    transition: all 0.3s ease !important;
-}
-
-.fc-button:hover {
-    background-color: #f5ad99 !important;
-    transform: translateY(-2px);
-}
-
-.fc-button-primary:not(:disabled).fc-button-active {
-    background-color: #895159 !important;
-    color: white !important;
+.fc-daygrid-day:hover {
+    background-color: rgba(223, 174, 161, 0.1) !important;
 }
 
 .fc-day-today {
     background-color: rgba(223, 174, 161, 0.2) !important;
+    border: 2px solid #DFAEA1 !important;
 }
 
-/* Eventos de tareas */
+/* Eventos (tareas) en el calendario */
 .fc-event {
-    background-color: #895159 !important;
     border: none !important;
-    border-radius: 4px !important;
-    padding: 2px 4px !important;
+    border-radius: 6px !important;
+    padding: 4px 6px !important;
     font-size: 0.85rem !important;
     cursor: pointer !important;
     transition: all 0.3s ease !important;
+    margin-bottom: 2px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .fc-event:hover {
-    background-color: #374375 !important;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-/* Modal personalizado */
-.modal-content {
+/* Colores de eventos según estado (usando paleta) */
+.evento-nuevo {
+    background-color: #D5D8F0 !important; 
+    color: #374375 !important;
+}
+
+.evento-progreso {
+    background-color: #E6B8A8 !important;
+    color: #895159 !important;
+}
+
+.evento-completado {
+    background-color: #6A3F46 !important; 
+    color: white !important;
+}
+
+.evento-vencida {
+    background-color: #C44545 !important;
+    color: white !important;
+}
+
+/* Items de la lista de tareas */
+.list-group-item {
     border: none;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 1rem;
+    transition: all 0.2s ease;
 }
 
-.modal-header {
-    background-color: #374375;
-    color: white;
+.list-group-item:last-child {
     border-bottom: none;
-    border-radius: 12px 12px 0 0;
-    padding: 1.5rem;
 }
 
-.modal-title {
+.list-group-item:hover {
+    background-color: rgba(55, 67, 117, 0.05);
+}
+
+/* Badges para estados en modal */
+.estado-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
     font-weight: 600;
 }
 
-.modal-body {
-    padding: 2rem;
+/* Contenedor de información */
+.tarea-info-simple {
+    padding: 0.5rem;
 }
 
-.modal-footer {
-    border-top: 1px solid #e9ecef;
-    padding: 1.5rem;
-}
-
-/* Lista de tareas en modal */
-.tarea-item {
+/* Items individuales de información */
+.info-item-simple {
     padding: 0.75rem;
-    border-bottom: 1px solid #e9ecef;
-    transition: all 0.3s ease;
+    background-color: #F8F9FA;
+    border-radius: 8px; 
+    transition: all 0.2s ease;
+    margin-bottom: 0.75rem;
 }
 
-.tarea-item:hover {
-    background-color: rgba(223, 174, 161, 0.1);
-}
-
-.tarea-item:last-child {
-    border-bottom: none;
-}
-
-.tarea-nombre {
-    font-weight: 600;
-    color: #374375;
-    margin-bottom: 0.25rem;
-}
-
-.tarea-detalle {
-    color: #6c757d;
-    font-size: 0.9rem;
+.info-item-simple:last-child {
     margin-bottom: 0;
 }
 
-/* Estilos para botones del modal */
-.modal-footer .btn {
-    border: none;
-    border-radius: 6px;
-    padding: 0.5rem 1rem;
-    font-weight: 500;
+.info-item-simple:hover {
+    background-color: #E9ECEF;
+}
+
+/* Título de la tarea en el modal */
+#tareaTitulo {
+    color: #374375;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Botón primario (Ver Tarea) */
+.modal-footer .btn-primary {
+    background-color: #374375;
+    border-color: #374375;
+    color: white;
     transition: all 0.3s ease;
 }
 
-/* O si prefieres diferenciar el botón "Ver" */
-.modal-footer .btn-ver {
-    background-color: #374375;
-    color: white;
+.modal-footer .btn-primary:hover {
+    background-color: #2c3660;
+    border-color: #2c3660;
+    transform: translateY(-1px);
 }
 
-.modal-footer .btn-ver:hover {
-    background-color: #2a3560;
-    color: white;
+/* Botón secundario (Cerrar) */
+.modal-footer .btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+    transition: all 0.3s ease;
 }
 
-/* Responsive */
+.modal-footer .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+    transform: translateY(-1px);
+}
+
 @media (max-width: 768px) {
-    .hero-section {
-        margin-top: 100px;
-        padding: 1rem;
+    /* Calendario en móviles */
+    #calendar {
+        padding: 0.75rem;
+        max-height: 500px;
     }
+    
+    .fc-event {
+        font-size: 0.7rem !important;
+        padding: 2px 4px !important;
+    }
+    
+    /* Modales en móviles */
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    .list-group-item {
+        padding: 0.75rem;
+    }
+    
+    .info-item-simple {
+        padding: 0.5rem;
+    }
+}
 
+@media (max-width: 576px) {
+    /* Cabecera del calendario en móviles pequeños */
     .calendar-header {
         flex-direction: column;
-        gap: 1rem;
-        text-align: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
     }
+    
+    .month-title {
+        font-size: 1.2rem;
+        min-width: auto;
+        order: 2;
+    }
+    
+    .nav-btn {
+        width: 35px;
+        height: 35px;
+        order: 1;
+    }
+    
+    #prevMonth {
+        order: 1;
+    }
+    
+    #nextMonth {
+        order: 3;
+    }
+    
+    /* Ajustes de texto en móviles */
+    .modal-title {
+        font-size: 1rem;
+    }
+    
+    #tareaTitulo {
+        font-size: 1.1rem;
+    }
+    
+    .info-item-simple .fw-bold {
+        font-size: 0.95rem;
+    }
+}
 
-    .fc-toolbar {
-        flex-direction: column !important;
-        gap: 1rem !important;
-    }
+/* UTILIDADES */
+/* Iconos en items de información */
+.info-item-simple i {
+    font-size: 1.1rem;
+    min-width: 24px;
+    text-align: center;
+}
+
+/* Texto de etiquetas pequeñas */
+.text-muted.small {
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Espaciado mejorado */
+.mb-2 {
+    margin-bottom: 0.5rem !important;
+}
+
+.mb-3 {
+    margin-bottom: 1rem !important;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+/* Scroll suave */
+.fc-view-harness,
+#calendar {
+    scrollbar-width: thin;
+    scrollbar-color: #DFAEA1 #F8F9FA;
+}
+
+.fc-view-harness::-webkit-scrollbar,
+#calendar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.fc-view-harness::-webkit-scrollbar-track,
+#calendar::-webkit-scrollbar-track {
+    background: #F8F9FA;
+    border-radius: 3px;
+}
+
+.fc-view-harness::-webkit-scrollbar-thumb,
+#calendar::-webkit-scrollbar-thumb {
+    background-color: #DFAEA1;
+    border-radius: 3px;
 }

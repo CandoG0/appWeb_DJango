@@ -69,12 +69,17 @@
                 </ul>
             </div>
             <div class="card-footer">
-                <a href="#" class="card-link ver-link">
+                <a href="{% url 'miapp:detalle_tarea' tarea.id %}" class="card-link ver-link">
                     <i class="bi bi-eye me-1"></i>Ver
                 </a>
-                <a href="#" class="card-link eliminar-link">
+                <button type="button" class="card-link eliminar-link" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#modalEliminar"
+                        data-tarea-id="{{ tarea.id }}"
+                        data-tarea-nombre="{{ tarea.nombre_tarea }}"
+                        data-tarea-asignatura="{{ tarea.asignatura }}">
                     <i class="bi bi-trash me-1"></i>Eliminar
-                </a>
+                </button>
             </div>
         </div>
         {% empty %}
@@ -86,6 +91,45 @@
         {% endfor %}
     </div>
 </div>
+
+<!-- Modal de eliminación (ÚNICO para todas las tareas) -->
+<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="modalEliminarLabel">
+                    <i class="bi bi-exclamation-triangle me-2"></i>Confirmar Eliminación
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <i class="bi bi-trash display-4 text-danger"></i>
+                </div>
+                <p class="text-center">¿Estás seguro de que deseas eliminar esta tarea completada?</p>
+                <div class="alert alert-warning mt-3">
+                    <h6 class="alert-heading mb-2" id="modalTareaNombre">Nombre de la tarea</h6>
+                    <p class="mb-0 small" id="modalTareaAsignatura">Asignatura</p>
+                </div>
+                <p class="text-danger text-center small mt-2">
+                    <i class="bi bi-info-circle me-1"></i>Esta acción no se puede deshacer
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i>Cancelar
+                </button>
+                <form id="formEliminarTarea" method="POST" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i>Eliminar Permanentemente
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // Script al scrollear se oculta el header
     let lastScrollY = window.scrollY;
@@ -116,6 +160,72 @@
         if (e.clientY < 100 && sectionTitle.classList.contains('hidden')) {
             sectionTitle.classList.remove('hidden');
         }
+    });
+
+    // Configurar modal de eliminación dinámico
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalEliminar = document.getElementById('modalEliminar');
+        
+        if (modalEliminar) {
+            // Cuando se abre el modal
+            modalEliminar.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget; // Botón que activó el modal
+                
+                // Obtener datos de la tarea
+                const tareaId = button.getAttribute('data-tarea-id');
+                const tareaNombre = button.getAttribute('data-tarea-nombre');
+                const tareaAsignatura = button.getAttribute('data-tarea-asignatura');
+                
+                // Actualizar información en el modal
+                document.getElementById('modalTareaNombre').textContent = tareaNombre;
+                document.getElementById('modalTareaAsignatura').textContent = tareaAsignatura;
+                
+                // Configurar action del formulario
+                const form = document.getElementById('formEliminarTarea');
+                form.action = "{% url 'miapp:eliminar_tarea' 0 %}".replace('0', tareaId);
+                
+                // Opcional: Agregar efecto al botón de eliminar
+                const btnEliminar = form.querySelector('button[type="submit"]');
+                btnEliminar.addEventListener('click', function() {
+                    this.innerHTML = '<i class="bi bi-hourglass me-1"></i>Eliminando...';
+                    this.disabled = true;
+                }, { once: true });
+            });
+            
+            // Cuando se cierra el modal, resetear el botón
+            modalEliminar.addEventListener('hidden.bs.modal', function() {
+                const btnEliminar = document.querySelector('#formEliminarTarea button[type="submit"]');
+                if (btnEliminar) {
+                    btnEliminar.innerHTML = '<i class="bi bi-trash me-1"></i>Eliminar Permanentemente';
+                    btnEliminar.disabled = false;
+                }
+            });
+        }
+        
+        // También puedes agregar confirmación rápida con doble clic
+        document.querySelectorAll('.eliminar-link').forEach(button => {
+            button.addEventListener('dblclick', function(e) {
+                e.preventDefault();
+                const tareaId = this.getAttribute('data-tarea-id');
+                const tareaNombre = this.getAttribute('data-tarea-nombre');
+                
+                if (confirm(`¿Eliminar "${tareaNombre}"?\n\n(Doble clic para confirmar)`)) {
+                    // Crear formulario dinámico y enviar
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = "{% url 'miapp:eliminar_tarea' 0 %}".replace('0', tareaId);
+                    
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = 'csrfmiddlewaretoken';
+                    csrfInput.value = '{{ csrf_token }}';
+                    
+                    form.appendChild(csrfInput);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        });
     });
 </script>
 {% endblock %}

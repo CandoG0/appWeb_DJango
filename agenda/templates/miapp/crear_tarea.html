@@ -1,7 +1,9 @@
 {% extends "forms.html" %}
 {% load static %}
 
-{% block title %}Agenda - Crear tarea{% endblock title %}
+{% block title %}
+{% if modo == "editar" %}Agenda - Editar Tarea{% else %}Agenda - Crear Tarea{% endif %}
+{% endblock title %}
 
 {% block extra_css %}
 <link href="{% static 'css/crearTarea.css' %}" rel="stylesheet">
@@ -10,17 +12,24 @@
 {% block content %}
 <div class="hero-section">
     <h2 class="section-title">
-        <a href="javascript:history.back()" class="back-arrow" title="Regresar">
+        <a href="{% if modo == 'editar' %}{% url 'miapp:detalle_tarea' tarea.id %}{% else %}{% url 'miapp:listar_tareas' %}{% endif %}" 
+           class="back-arrow" title="Regresar">
             <i class="bi bi-arrow-left"></i>
         </a>
-        Crear Nueva Tarea
+        {% if modo == "editar" %}Editar Tarea{% else %}Crear Nueva Tarea{% endif %}
     </h2>
 
     <div class="form-container">
         <form action="" method="post">
             {% csrf_token %}
 
-            <p class="form-intro">Por favor registra los datos de la tarea</p>
+            <p class="form-intro">
+                {% if modo == "editar" %}
+                    Modifica los datos de la tarea
+                {% else %}
+                    Por favor registra los datos de la tarea
+                {% endif %}
+            </p>
 
             <!-- Mostrar mensajes -->
             {% if messages %}
@@ -103,10 +112,27 @@
 
             <div class="d-grid gap-2">
                 <button class="btn btn-primary-custom" type="submit">
-                    <i class="bi bi-check-circle me-2"></i>Registrar tarea
+                    <i class="bi bi-check-circle me-2"></i>
+                    {% if modo == "editar" %}Guardar Cambios{% else %}Registrar Tarea{% endif %}
                 </button>
             </div>
         </form>
     </div>
 </div>
+<script>
+    // Script para mostrar valores por defecto en selects (por si hay problemas)
+    document.addEventListener('DOMContentLoaded', function() {
+        // Establecer valores de los selects si el form tiene datos
+        const prioridadValue = "{{ form.prioridad.value|default:'' }}";
+        const modalidadValue = "{{ form.modalidad.value|default:'' }}";
+        
+        if (prioridadValue) {
+            document.getElementById('id_prioridad').value = prioridadValue;
+        }
+        
+        if (modalidadValue) {
+            document.getElementById('id_modalidad').value = modalidadValue;
+        }
+    });
+</script>
 {% endblock %}

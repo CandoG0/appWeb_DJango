@@ -74,17 +74,17 @@
 
 .btn-primary {
     border: none;
-    background-color: #DFAEA1;
-    color: #374375;
+    background-color: #374375;
+    color: white;
     font-weight: 600;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
 }
 
 .btn-primary:hover {
-    background-color: #f5ad99;
+    background-color: #d49584;
     color: #374375;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -164,44 +164,16 @@
     gap: 0.5rem;
 }
 
-/* Estilos específicos para tareas completadas */
-.completed-card {
-    border-left: 4px solid #28a745 !important;
-    opacity: 0.9;
-    transition: all 0.3s ease;
-}
-
 .completed-card:hover {
     opacity: 1;
     transform: translateY(-2px);
 }
 
 .completed-badge {
+    color:white;
+    background: #7A9C7A !important;
     font-size: 0.75rem;
     padding: 0.25rem 0.5rem;
-}
-
-/* Efecto de tachado opcional para tareas completadas */
-.card-title.completed {
-    text-decoration: line-through;
-    color: #6c757d;
-}
-
-/* Indicador de estado de completado */
-.status-indicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 5px;
-}
-
-.status-on-time {
-    background-color: #28a745;
-}
-
-.status-late {
-    background-color: #ffc107;
 }
 
 /* Botones de acción en tarjetas - Compactos */
@@ -236,24 +208,24 @@
 }
 
 .card-link.eliminar-link {
-    color: #dc3545;
+    color: #973636;
 }
 
 .card-link.eliminar-link:hover {
     color: white;
-    background-color: #dc3545;
+    background-color: #973636;
 }
 
 
 /* Botón de éxito (Hecho) */
 .card-link.success-link {
-    color: #28a745;
-    border: 1px solid #28a745;
+    color: #7A9C7A;
+    border: 1px solid #7A9C7A;
 }
 
 .card-link.success-link:hover {
     color: white;
-    background-color: #28a745;
+    background-color: #7A9C7A;
     text-decoration: none;
 }
 

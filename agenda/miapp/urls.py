@@ -10,12 +10,18 @@ urlpatterns = [
     # views.crear_tarea viene de la carpeta miapp views.py despues del def
     path("tareas/", views.listar_tareas, name="listar_tareas"),
     path("tareas/crear/", views.crear_tarea, name="crear_tarea"),
-    #aqui va para editar tarea
-    #aqui va para eliminar tarea
+
     path("tareas/vencer/", views.tareas_vencer, name="tareas_vencer"),
     path("tareas/pendientes/", views.tareas_pendientes, name="tareas_pendientes"),
     path("tareas/completar/<int:tarea_id>/", views.marcar_completada, name="marcar_completada"),
     path("tareas/completadas/", views.tareas_completadas, name="tareas_completadas"),
-    path("detalle_tarea/", views.detalle_tarea, name="detalle_tarea"),
-    path("calendario/", views.calendario, name="calendario"),
+    
+    path("tareas/detalle/<int:tarea_id>/", views.detalle_tarea, name="detalle_tarea"),
+    
+    path("tareas/editar/<int:tarea_id>/", views.editar_tarea, name="editar_tarea"),
+    path("tareas/actualizar/<int:tarea_id>/", views.actualizar_estado, name="actualizar_estado"),
+    path("tareas/eliminar/<int:tarea_id>/", views.eliminar_tarea, name="eliminar_tarea"),
+    
+    path('calendario/', views.calendario_view, name='calendario'),
+    path('api/tareas-calendario/', views.tareas_calendario_api, name='tareas_calendario_api'),
 ]

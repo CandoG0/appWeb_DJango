@@ -71,7 +71,7 @@
     background-color: transparent;
 }
 
-/* Botón crear mejorado */
+/* Botón crear */
 .btn-crear {
     margin-bottom: 1rem;
     text-align: left;
@@ -79,13 +79,13 @@
 
 .btn-primary {
     border: none;
-    background-color: #DFAEA1;
-    color: #374375;
+    background-color: #374375;
+    color: white;
     font-weight: 600;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
 }
 
 .btn-primary:hover {
@@ -100,7 +100,7 @@
     transform: translateY(0);
 }
 
-/* Tabla mejorada */
+/* Tabla */
 .table-container {
     background-color: #FFFCF5;
     border-radius: 5px;
@@ -117,30 +117,21 @@
 
 .table thead {
     background-color: #FFFCF5;
-    /* Header más oscuro */
 }
 
 .table th {
     border: none;
     padding: 1rem;
     font-weight: 500;
-    color: #DFAEA1;
+    color: #374375;
     background-color: #FFFCF5 !important;
-    /* Fondo header */
 }
 
 .table td {
     border: none;
     padding: 1rem;
-    /* vertical-align: middle; */
     background-color: #FFFCF5 !important;
-    /* Fondo celdas */
 }
-
-/* .table tbody tr {
-    transition: all 0.3s ease;
-    background-color: #FFFCF5 !important;
-} */
 
 /* Mejora visual para las tablas */
 .table tbody tr {
@@ -148,22 +139,18 @@
 }
 
 .table tbody tr:has(.badge.bg-danger) {
-    border-left-color: #dc3545;
+    border-left-color: #C44545;
     background-color: rgba(220, 53, 69, 0.05) !important;
 }
 
 .table tbody tr:has(.badge.bg-warning) {
-    border-left-color: #ffc107;
+    border-left-color: #E6B450;
     background-color: rgba(255, 193, 7, 0.05) !important;
-}
-
-.table tbody tr:hover {
-    background-color: #FFFCF5 !important;
-    /* Hover más claro */
 }
 
 /* Para el texto largo de tareas */
 .tarea-texto {
+    color: #374375 !important;
     max-width: 300px;
     word-wrap: break-word;
     white-space: normal;
@@ -172,17 +159,17 @@
 
 /* Estados con colores */
 .estado-nuevo {
-    color: #DFAEA1;
+    color: #D5D8F0;
     font-weight: 600;
 }
 
 .estado-pendiente {
-    color: #ffc107;
+    color: #E6B8A8;
     font-weight: 600;
 }
 
 .estado-completado {
-    color: #28a745;
+    color: #7A9C7A;
     font-weight: 600;
 }
 
@@ -215,35 +202,21 @@
     padding: 0.375rem 0.75rem;
 }
 
-/* Botones de acción */
-.btn-group .btn {
-    border-radius: 4px;
-    margin: 0 2px;
+.text-warning{
+    color: #374375 !important;
 }
 
-.btn-outline-primary {
-    border-color: #374375;
-    color: #374375;
+.text-info{
+    color: #895159 !important;
 }
 
-.btn-outline-primary:hover {
-    background-color: #374375;
-    border-color: #374375;
-}
-
-.btn-outline-danger {
-    border-color: #dc3545;
-    color: #dc3545;
-}
-
-.btn-outline-danger:hover {
-    background-color: #dc3545;
-    border-color: #dc3545;
+.text-success{
+    color: #7A9C7A !important;
 }
 
 /* Estados mejorados */
 .estado-completado {
-    color: #28a745;
+    color: #7A9C7A;
     font-weight: 600;
 }
 
@@ -281,7 +254,6 @@
 .text-center .display-1 {
     opacity: 0.5;
 }
-
 
 /* Mejoras responsive */
 @media (max-width: 768px) {
