@@ -231,7 +231,6 @@
     margin-bottom: 1rem;
 }
 
-/* Información adicional */
 /* Iconos de información adicional */
 .icon-dias {
     color: #C44545 !important;
@@ -280,6 +279,48 @@
 .list-unstyled li strong {
     color: #374375;
     margin-right: 0.5rem;
+}
+
+/* Estilos para post-it/notas */
+.contenedor-postit {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.postit {
+    background: linear-gradient(135deg, #fff9e6 0%, #fff5d6 100%);
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    min-height: 100px;
+    position: relative;
+}
+
+.postit:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.postit-header {
+    border-bottom: 1px solid rgba(230, 180, 80, 0.2);
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+}
+
+.postit-body {
+    padding: 10px;
+    flex-grow: 1;
+    color: #495057;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.postit-body p {
+    margin-bottom: 0;
 }
 
 /* Modales */

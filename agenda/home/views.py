@@ -2,12 +2,57 @@ from miapp.forms import UsuarioRegistroForm
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from miapp.forms import LoginForm
-from miapp.models import Usuario
+from miapp.models import Usuario, Tarea
+from django.utils import timezone
+from datetime import timedelta
 
 # Create your views here.
 def index(request):
-    # return HttpResponse ("Hola Mundo.")
-    return render(request, "home/index.html")
+    # Verificar que el usuario esté logueado
+    if "usuario_id" not in request.session:
+        messages.error(request, "Debes iniciar sesión para ver tus tareas.")
+        return redirect("login")
+
+    # Obtener el ID del usuario logueado
+    usuario_id = request.session["usuario_id"]
+    
+    usuario_actual = Usuario.objects.get(id=usuario_id)
+
+    # Obtener fechas
+    hoy = timezone.now().date()
+    manana = hoy + timedelta(days=1)
+    fin_semana = hoy + timedelta(days=7)
+
+    # Tareas para hoy (que vencen hoy y no están completadas)
+    tareas_hoy = Tarea.objects.filter(
+        usuario_id=usuario_id,
+        fecha_entrega=hoy,
+        estatus__nombre__in=["nue", "pro"]
+    ).count()
+
+    # Tareas para esta semana (excluyendo hoy)
+    tareas_semana = Tarea.objects.filter(
+        usuario_id=usuario_id,
+        fecha_entrega__range=[manana, fin_semana],
+        estatus__nombre__in=["nue", "pro"]
+    ).count()
+
+    # Tareas que ya vencieron (fecha anterior a hoy y no completadas)
+    tareas_vencidas = Tarea.objects.filter(
+        usuario_id=usuario_id,
+        fecha_entrega__lt=hoy,
+        estatus__nombre__in=["nue", "pro"]
+    ).count()
+
+    context = {
+        "usuario_actual": usuario_actual,
+        "tareas_por_vencer": {
+            "hoy": tareas_hoy,
+            "proxima_semana": tareas_semana,
+            "vencidas": tareas_vencidas
+        }
+    }
+    return render(request, "home/index.html", context)
 
 def login(request):
     # Si ya hay un usuario en sesión, redirigir al inicio

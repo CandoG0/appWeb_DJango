@@ -95,6 +95,15 @@
     transform: translateY(0);
 }
 
+.btn-danger {
+    background-color: #C44545 !important;
+    color: white !important;
+}
+
+.btn-danger:hover {
+    background-color: #973636 !important;
+    border-color: #973636 !important;
+}
 /* AGREGADO: Diseño de tarjetas compactas */
 .tareas-grid {
     display: grid;
@@ -208,6 +217,7 @@
 }
 
 .card-link.eliminar-link {
+    border: none;
     color: #973636;
 }
 
@@ -215,7 +225,6 @@
     color: white;
     background-color: #973636;
 }
-
 
 /* Botón de éxito (Hecho) */
 .card-link.success-link {

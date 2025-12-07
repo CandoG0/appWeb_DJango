@@ -8,19 +8,48 @@
 {% endblock %}
 
 {% block content %}
-<div class="hero-section">
+<div class="hero-section {% if tareas_por_vencer.hoy > 0 or tareas_por_vencer.proxima_semana > 0 or tareas_por_vencer.vencidas > 0 %}with-alert{% else %}without-alert{% endif %}">
     <!-- Título de sección en esquina superior izquierda -->
     <h2 class="section-title">Inicio</h2>
+
+    <!-- Notificación de tareas por vencer -->
+    {% if tareas_por_vencer.hoy > 0 or tareas_por_vencer.proxima_semana > 0 or tareas_por_vencer.vencidas > 0 %}
+    <div class="alert-notification">
+        <div class="alert-content">
+            <div class="alert-text">
+                <strong>Tareas pendientes:</strong>
+                {% if tareas_por_vencer.vencidas > 0 %}
+                <span class="alert-highlight alert-danger">{{ tareas_por_vencer.vencidas }} vencidas</span>
+                {% if tareas_por_vencer.hoy > 0 or tareas_por_vencer.proxima_semana > 0 %} · {% endif %}
+                {% endif %}
+                {% if tareas_por_vencer.hoy > 0 %}
+                <span class="alert-highlight alert-today">{{ tareas_por_vencer.hoy }} para hoy</span>
+                {% if tareas_por_vencer.proxima_semana > 0 %} · {% endif %}
+                {% endif %}
+                {% if tareas_por_vencer.proxima_semana > 0 %}
+                <span class="alert-highlight alert-week">{{ tareas_por_vencer.proxima_semana }} esta semana</span>
+                {% endif %}
+            </div>
+            <a href="{% url 'miapp:listar_tareas' %}" class="alert-action">
+                Ver detalles
+            </a>
+        </div>
+        <button class="alert-close" onclick="this.parentElement.style.display='none'">
+            <i class="bi bi-x"></i>
+        </button>
+    </div>
+    {% endif %}
+
     <!-- Título principal -->
     <h1 class="welcome-title">
         Hola,
         {% if usuario_actual %}
-            {{ usuario_actual.nombre|default:"Usuario" }}
+        {{ usuario_actual.nombre|default:"Usuario" }}
         {% else %}
-            Visitante
+        Visitante
         {% endif %}
     </h1>
-    
+
     <h2 class="welcome-subtitle">¿Cuáles son los pendientes de hoy?</h2>
 
     <!-- Botones -->
@@ -36,24 +65,34 @@
         </a>
     </div>
 
-    <!-- Mensaje de tareas pendientes -->
-    <!-- Mensaje de tareas pendientes -->
-    <h5 class="tasks-message">
-        {% if usuario_actual.tareas_pendientes_count == 0 %}
-            ¡No hay tareas pendientes!
-        {% elif usuario_actual.tareas_pendientes_count == 1 %}
-        Tienes 1 tarea pendiente
-        {% else %}
-            Tienes {{ usuario_actual.tareas_pendientes_count }} tareas pendientes
-        {% endif %}
-    </h5>
-    
-    <!-- Con más detalle -->
-    <!--     <h5 class="tasks-message">
-        Tienes
-        <span>{{ usuario_actual.tareas_por_vencer.vencidas }}</span> vencidas,
-        <span>{{ usuario_actual.tareas_por_vencer.hoy }}</span> para hoy,
-        <span>{{ usuario_actual.tareas_por_vencer.manana }}</span> para mañana
-    </h5> -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const alertNotification = document.querySelector('.alert-notification');
+            const closeButton = document.querySelector('.alert-close');
+            const heroSection = document.querySelector('.hero-section');
+
+            if (alertNotification && closeButton && heroSection) {
+                const sessionKey = 'alertClosed_' + new Date().toDateString();
+
+                if (!sessionStorage.getItem(sessionKey)) {
+                    alertNotification.style.display = 'flex';
+                    heroSection.classList.add('with-alert');
+                    heroSection.classList.remove('without-alert');
+                } else {
+                    // Si ya estaba cerrada, asegurar que tenga la clase correcta
+                    heroSection.classList.add('without-alert');
+                    heroSection.classList.remove('with-alert');
+                }
+
+                closeButton.addEventListener('click', function () {
+                    sessionStorage.setItem(sessionKey, 'true');
+                    alertNotification.style.display = 'none';
+                    heroSection.classList.remove('with-alert');
+                    heroSection.classList.add('without-alert');
+                });
+            }
+        });
+    </script>
+
 </div>
 {% endblock content %}

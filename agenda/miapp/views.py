@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
 from .forms import TareaForm
-from .models import Tarea, Estatu, Usuario
+from .models import Tarea, Estatu, Usuario, ComentarioTarea
 import json
 from datetime import datetime
 from django.http import JsonResponse
@@ -269,14 +269,6 @@ def marcar_completada(request, tarea_id):
         return redirect("miapp:listar_tareas")
 
 
-def detalle_tarea(request):
-    return render(request, "miapp/detalle_tarea.html")
-
-
-def calendario(request):
-    return render(request, "miapp/calendario.html")
-
-
 def detalle_tarea(request, tarea_id):
     # Verificar que el usuario esté logueado
     if "usuario_id" not in request.session:
@@ -417,6 +409,7 @@ def actualizar_estado(request, tarea_id):
         try:
             # Obtener la tarea y verificar que pertenece al usuario
             tarea = get_object_or_404(Tarea, id=tarea_id, usuario_id=usuario_id)
+            usuario = get_object_or_404(Usuario, id=usuario_id)
 
             # Obtener el nuevo estado del formulario
             nuevo_estado_nombre = request.POST.get("estado")
@@ -436,14 +429,24 @@ def actualizar_estado(request, tarea_id):
             tarea.estatus = nuevo_estado
             tarea.save()
 
-            # Aquí podrías guardar el comentario en un modelo de historial
-            # Por ahora solo lo mostramos en consola
-            if comentario:
-                print(
-                    f"Comentario para tarea {tarea_id} (usuario {usuario_id}): {comentario}"
+            # GUARDAR COMENTARIO SI EXISTE - ¡CORREGIDO!
+            if (
+                comentario
+            ):  # ¡Aquí estaba el error! Usar 'comentario' no 'comentario_texto'
+                ComentarioTarea.objects.create(
+                    tarea=tarea,
+                    usuario=usuario,
+                    contenido=comentario,
+                    tipo="seg",  # 'seg' para seguimiento (cambio de estado)
                 )
 
-            # Mensaje según el cambio
+                # Mensaje con comentario
+                messages.success(request, f"Estado actualizado y comentario agregado.")
+            else:
+                # Mensaje sin comentario
+                messages.success(request, f"Estado actualizado correctamente.")
+
+            # Mensaje adicional según el cambio de estado
             if estado_anterior != nuevo_estado_nombre:
                 if nuevo_estado_nombre == "fin":
                     messages.success(
@@ -464,6 +467,11 @@ def actualizar_estado(request, tarea_id):
 
         except Exception as e:
             messages.error(request, f"Error al actualizar el estado: {str(e)}")
+            # También podrías loguear el error para debug
+            import logging
+
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error actualizando estado tarea {tarea_id}: {str(e)}")
 
     # Redirigir de vuelta al detalle de la tarea
     return redirect("miapp:detalle_tarea", tarea_id=tarea_id)
@@ -476,8 +484,8 @@ def calendario_view(request):
 
     if not usuario_id:
         # Redirigir a login si no está autenticado
-        return redirect('login')  # Ajusta al nombre de tu URL de login
-    
+        return redirect("login")  # Ajusta al nombre de tu URL de login
+
     return render(request, "miapp/calendario.html", {})
 
 
@@ -485,116 +493,137 @@ def calendario_view(request):
 @require_GET
 def tareas_calendario_api(request):
     """API para obtener tareas en formato JSON para el calendario"""
-    usuario_id = request.session.get('usuario_id')
-    
+    usuario_id = request.session.get("usuario_id")
+
     if not usuario_id:
         return JsonResponse([], safe=False)
-    
+
     try:
         # Obtener usuario
         usuario = Usuario.objects.get(id=usuario_id)
-        
+
         # Obtener tareas del usuario con fecha de entrega
         tareas = Tarea.objects.filter(
-            usuario=usuario, 
-            fecha_entrega__isnull=False
-        ).select_related('estatus')  # Optimizar consulta
-        
+            usuario=usuario, fecha_entrega__isnull=False
+        ).select_related(
+            "estatus"
+        )  # Optimizar consulta
+
         # Convertir a formato FullCalendar
         eventos = []
         for tarea in tareas:
             # Obtener información del estado
             estado_nombre = ""
             estado_display = ""
-            
+
             if tarea.estatus:
                 estado_nombre = tarea.estatus.nombre  # 'nue', 'pro', 'fin'
                 # Usar get_nombre_display() si existe, sino el nombre
-                if hasattr(tarea.estatus, 'get_nombre_display'):
+                if hasattr(tarea.estatus, "get_nombre_display"):
                     estado_display = tarea.estatus.get_nombre_display()
                 else:
                     estado_display = estado_nombre.upper()
-            
+
             # Determinar color según estado
-            color = '#895159'  # Color por defecto (SECONDARY MAROON)
-            
-            if estado_nombre == 'fin':
-                color = '#6A3F46'  # Completado
-            elif estado_nombre == 'pro':
-                color = '#E6B8A8'  # En progreso (PEACH)
-            elif estado_nombre == 'nue':
-                color = '#D5D8F0'  # Nuevo (PERIWINKLE variante)
-            
+            color = "#895159"  # Color por defecto (SECONDARY MAROON)
+
+            if estado_nombre == "fin":
+                color = "#6A3F46"  # Completado
+            elif estado_nombre == "pro":
+                color = "#E6B8A8"  # En progreso (PEACH)
+            elif estado_nombre == "nue":
+                color = "#D5D8F0"  # Nuevo (PERIWINKLE variante)
+
             # Determinar si está vencida
             hoy = datetime.now().date()
-            if tarea.fecha_entrega < hoy and estado_nombre != 'fin':
-                color = '#C44545'  # Vencida
-            
+            if tarea.fecha_entrega < hoy and estado_nombre != "fin":
+                color = "#C44545"  # Vencida
+
             # Obtener display names usando los métodos del modelo
-            modalidad_display = tarea.get_modalidad_display() if hasattr(tarea, 'get_modalidad_display') else "Individual"
-            prioridad_display = tarea.get_prioridad_display() if hasattr(tarea, 'get_prioridad_display') else "Media"
-            
+            modalidad_display = (
+                tarea.get_modalidad_display()
+                if hasattr(tarea, "get_modalidad_display")
+                else "Individual"
+            )
+            prioridad_display = (
+                tarea.get_prioridad_display()
+                if hasattr(tarea, "get_prioridad_display")
+                else "Media"
+            )
+
             evento = {
-                'id': tarea.id,
-                'title': tarea.nombre_tarea,
-                'start': tarea.fecha_entrega.isoformat(),
-                'color': color,
-                'textColor': '#FFFFFF' if color in ['#895159', '#6A3F46', '#C44545'] else '#000000',
-                'extendedProps': {
-                    'asignatura': tarea.asignatura,
-                    'descripcion': tarea.descripcion_tarea or '',
-                    'estado': estado_nombre,
-                    'estado_display': estado_display,
-                    'modalidad': modalidad_display,
-                    'prioridad': prioridad_display,
-                    'fecha_creacion': tarea.fecha_creacion.isoformat() if tarea.fecha_creacion else None,
-                    'usuario': usuario.nombre_completo if hasattr(usuario, 'nombre_completo') else usuario.nombre_usuario
-                }
+                "id": tarea.id,
+                "title": tarea.nombre_tarea,
+                "start": tarea.fecha_entrega.isoformat(),
+                "color": color,
+                "textColor": (
+                    "#FFFFFF"
+                    if color in ["#895159", "#6A3F46", "#C44545"]
+                    else "#000000"
+                ),
+                "extendedProps": {
+                    "asignatura": tarea.asignatura,
+                    "descripcion": tarea.descripcion_tarea or "",
+                    "estado": estado_nombre,
+                    "estado_display": estado_display,
+                    "modalidad": modalidad_display,
+                    "prioridad": prioridad_display,
+                    "fecha_creacion": (
+                        tarea.fecha_creacion.isoformat()
+                        if tarea.fecha_creacion
+                        else None
+                    ),
+                    "usuario": (
+                        usuario.nombre_completo
+                        if hasattr(usuario, "nombre_completo")
+                        else usuario.nombre_usuario
+                    ),
+                },
             }
             eventos.append(evento)
-        
+
         return JsonResponse(eventos, safe=False)
-        
+
     except Usuario.DoesNotExist:
         return JsonResponse([], safe=False)
     except Exception as e:
         print(f"Error en API de calendario: {str(e)}")
         import traceback
+
         traceback.print_exc()  # Para ver el traceback completo
-        
+
         # Datos de ejemplo para que el calendario funcione mientras
         hoy = datetime.now().date()
         eventos_debug = [
             {
-                'id': 999,
-                'title': 'Tarea de ejemplo (Debug)',
-                'start': hoy.isoformat(),
-                'color': '#895159',
-                'textColor': '#FFFFFF',
-                'extendedProps': {
-                    'asignatura': 'Debug',
-                    'descripcion': f'Error: {str(e)[:50]}...',
-                    'estado': 'nue',
-                    'estado_display': 'NUEVO',
-                    'modalidad': 'Individual',
-                    'prioridad': 'Alta',
-                }
+                "id": 999,
+                "title": "Tarea de ejemplo (Debug)",
+                "start": hoy.isoformat(),
+                "color": "#895159",
+                "textColor": "#FFFFFF",
+                "extendedProps": {
+                    "asignatura": "Debug",
+                    "descripcion": f"Error: {str(e)[:50]}...",
+                    "estado": "nue",
+                    "estado_display": "NUEVO",
+                    "modalidad": "Individual",
+                    "prioridad": "Alta",
+                },
             },
             {
-                'id': 998,
-                'title': 'Tarea mañana',
-                'start': (hoy + timedelta(days=1)).isoformat(),
-                'color': '#E6B8A8',
-                'textColor': '#895159',
-                'extendedProps': {
-                    'asignatura': 'Programación',
-                    'descripcion': 'Tarea en progreso',
-                    'estado': 'pro',
-                    'estado_display': 'EN PROGRESO',
-                    'modalidad': 'En Equipo',
-                    'prioridad': 'Media',
-                }
-            }
+                "id": 998,
+                "title": "Tarea mañana",
+                "start": (hoy + timedelta(days=1)).isoformat(),
+                "color": "#E6B8A8",
+                "textColor": "#895159",
+                "extendedProps": {
+                    "asignatura": "Programación",
+                    "descripcion": "Tarea en progreso",
+                    "estado": "pro",
+                    "estado_display": "EN PROGRESO",
+                    "modalidad": "En Equipo",
+                    "prioridad": "Media",
+                },
+            },
         ]
         return JsonResponse(eventos_debug, safe=False)
-    

@@ -179,4 +179,59 @@ class Tarea(models.Model):
             return '#D5D8F0'
         
         return '#895159'
+
+
+class ComentarioTarea(models.Model):
+    """Modelo para comentarios/notas en tareas"""
+    tarea = models.ForeignKey(
+        'Tarea', 
+        on_delete=models.CASCADE, 
+        related_name='comentarios'
+    )
+    usuario = models.ForeignKey(
+        'Usuario', 
+        on_delete=models.CASCADE, 
+        related_name='comentarios_tareas'
+    )
+    contenido = models.TextField()
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+    
+    # Opcional: tipo de comentario (general, seguimiento, etc.)
+    TIPO_CHOICES = [
+        ('gen', 'General'),
+        ('seg', 'Seguimiento'),
+        ('obs', 'Observación'),
+        ('rec', 'Recordatorio'),
+    ]
+    tipo = models.CharField(
+        max_length=3, 
+        choices=TIPO_CHOICES, 
+        default='gen'
+    )
+    
+    class Meta:
+        ordering = ['-fecha_creacion']
+        verbose_name = 'Comentario de Tarea'
+        verbose_name_plural = 'Comentarios de Tareas'
+    
+    def __str__(self):
+        return f"Comentario en {self.tarea.nombre_tarea} - {self.usuario.nombre_usuario}"
+    
+    @property
+    def tiempo_transcurrido(self):
+        """Devuelve el tiempo transcurrido desde la creación"""
+        ahora = timezone.now()
+        diferencia = ahora - self.fecha_creacion
+        
+        if diferencia.days > 30:
+            return f"Hace {diferencia.days // 30} mes(es)"
+        elif diferencia.days > 0:
+            return f"Hace {diferencia.days} día(s)"
+        elif diferencia.seconds > 3600:
+            return f"Hace {diferencia.seconds // 3600} hora(s)"
+        elif diferencia.seconds > 60:
+            return f"Hace {diferencia.seconds // 60} minuto(s)"
+        else:
+            return "Ahora mismo"
     

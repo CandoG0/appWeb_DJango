@@ -116,6 +116,7 @@
                 </div>
             </div>
 
+            <!-- Tarjeta de descripcion -->
             <div class="card mb-4">
                 <div class="card-header bg-light">
                     <h5 class="mb-0">Descripción</h5>
@@ -131,9 +132,40 @@
                 </div>
             </div>
 
+            <!-- Tarjeta de notas -->
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                       </i>Notas
+                </div>
+                <div class="card-body">
+                    {% if tarea.comentarios.all %}
+                    <div class="contenedor-postit">
+                        {% for comentario in tarea.comentarios.all %}
+                        <div class="postit">
+                            <div class="postit-header">
+                                <small class="text-muted">
+                                    <i class="bi bi-clock me-1"></i>{{ comentario.fecha_creacion|date:"d/m/Y H:i" }}
+                                </small>
+                            </div>
+                            <div class="postit-body">
+                                <p>{{ comentario.contenido|linebreaksbr }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-chat-left display-1 text-muted"></i>
+                        <h5 class="text-muted mt-3">Sin notas</h5>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
         </div>
 
-        <!-- Panel derecho: Acciones rápidas (SIMPLIFICADO) -->
+        <!-- Panel derecho: Acciones rápidas -->
         <div class="panel-acciones">
             <div class="card">
                 <div class="card-header bg-light">
@@ -216,15 +248,9 @@
                     <div class="mb-3">
                         <label for="nuevoEstado" class="form-label">Seleccionar Nuevo Estado</label>
                         <select class="form-select" id="nuevoEstado" name="estado" required>
-                            {% for estatus in estatus_disponibles %}
-                            <option value="{{ estatus.nombre }}"
-                                {% if tarea.estatus.nombre == estatus.nombre %}selected{%endif %}>
-                                {% if estatus.nombre == "nue" %}Nuevo
-                                {% elif estatus.nombre == "pro" %}En Progreso
-                                {% elif estatus.nombre == "fin" %}Completado
-                                {% else %}{{ estatus.nombre }}{% endif %}
-                            </option>
-                            {% endfor %}
+                            <option value="nue">Nuevo</option>
+                            <option value="pro">En Progreso</option>
+                            <option value="fin">Completado</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -242,7 +268,7 @@
     </div>
 </div>
 
-<!-- Modal para Eliminar (SIMPLIFICADO) -->
+<!-- Modal para Eliminar -->
 <div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
