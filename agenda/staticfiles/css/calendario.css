@@ -142,7 +142,7 @@
     transform: translateY(-1px);
 }
 
-/* Modal personalizado */
+/* Modal */
 .modal-content {
     border: none;
     border-radius: 12px;
@@ -206,7 +206,6 @@
     transition: all 0.3s ease;
 }
 
-/* O si prefieres diferenciar el botón "Ver" */
 .modal-footer .btn-ver {
     background-color: #374375;
     color: white;

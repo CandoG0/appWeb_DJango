@@ -38,7 +38,7 @@
     text-align: center;
 }
 
-/* Formulario mejorado */
+/* Formulario */
 .form-container {
     margin-top: 2rem;
     display: flex;
@@ -145,7 +145,7 @@ textarea.form-control {
     min-height: 100px;
 }
 
-/* Placeholders con mejor contraste */
+/* Placeholders */
 .form-control::placeholder {
     color: #8B4513;
     opacity: 0.7;
