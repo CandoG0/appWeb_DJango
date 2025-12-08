@@ -3,47 +3,6 @@ from .models import Usuario, Tarea
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-""" 
-from .models import Estudiante, Carrera
-
-class EstudianteForm(forms.ModelForm):
-    class Meta:
-        model = Estudiante
-        fields = ['nombre', 'appat', 'apmat', 'matricula', 'curp', 'fotografia', 'carrera']
-        wigets = {
-            'nombre': forms.TextInput(attrs={'placeholder': 'Nombre','class': 'form-control'}),
-            'appat': forms.TextInput(attrs={'placeholder': 'Apellido Paterno','class': 'form-control'}),
-            'apmat': forms.TextInput(attrs={'placeholder': 'Apellido Paterno','class': 'form-control'}),
-            'matricula': forms.TextInput(attrs={'placeholder': 'Matricula','class': 'form-control'}),
-            'curp': forms.TextInput(attrs={'placeholder': 'CURP','class': 'form-control'}),
-            'fotografia': forms.ClearableFileInput(),
-        }
-        labels = {
-            'nombre': 'Nombre',
-            'appat': 'Apellido Paterno',
-            'apmat': 'Apellido Materno',
-            'matricula': 'Matricula',
-            'curp': 'CURP',
-            'carrera': 'Carrera',
-            'fotografia': 'Fotografia'
-        }
-
-class CarreraForm(forms.ModelForm):
-    class Meta:
-        model= Carrera
-        fields = ['nombre','clave','modalidad']
-        widgets = {
-            'nombre': forms.TextInput(attrs={'placeholder': 'Nombre de la carrera'}),
-            'clave': forms.TextInput(attrs={'placeholder': 'Clave'}),
-            'modalidad': forms.Select(attrs={'placeholder': 'Modalidad'}),
-        }
-        labels = {
-            'nombre': 'Nombre',
-            'clave': 'Clave',
-            'modalidad': 'Modalidad',
-        } 
-"""
-
 
 class UsuarioRegistroForm(forms.ModelForm):
     confirmar_contrasenia = forms.CharField(
@@ -175,8 +134,8 @@ class TareaForm(forms.ModelForm):
                     "placeholder": "Nombre de la asignatura",
                 }
             ),
-            "fecha_entrega": forms.DateInput(  # CAMBIADO: DateTimeInput → DateInput
-                attrs={"class": "form-control", "type": "date"}  # CAMBIADO: datetime-local → date
+            "fecha_entrega": forms.DateInput(
+                attrs={"class": "form-control", "type": "date"}
             ),
             "prioridad": forms.Select(attrs={"class": "form-control"}),
             "modalidad": forms.Select(attrs={"class": "form-control"}),

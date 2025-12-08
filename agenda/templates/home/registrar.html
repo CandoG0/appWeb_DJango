@@ -9,7 +9,6 @@
 
 {% block content %}
 <div class="hero-section">
-    <!-- Encabezado corregido -->
     <h2 class="section-title">
         <a href="javascript:history.back()" class="back-arrow" title="Regresar">
             <i class="bi bi-arrow-left"></i>
@@ -25,7 +24,6 @@
 
             <p class="form-intro">Por favor, ingresa tus datos</p>
 
-            <!-- MOSTRAR ERRORES GENERALES -->
             {% if form.non_field_errors %}
             <div class="alert alert-danger">
                 {% for error in form.non_field_errors %}
