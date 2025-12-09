@@ -2,7 +2,6 @@
     position: fixed;
     top: 2rem;
     left: 50px;
-    /* Alineado con sidebar */
     font-size: 1.5rem;
     font-weight: 600;
     color: #374375;
@@ -32,7 +31,7 @@
     padding: 2rem;
 }
 
-/* Formulario mejorado */
+/* Formulario */
 .form-container {
     margin-top: 2rem;
     display: flex;
@@ -45,7 +44,6 @@ form {
     background-color: #374375;
     width: 100%;
     max-width: 450px;
-    /* Más compacto para login */
     margin: 0 auto;
     padding: 2rem;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
@@ -118,7 +116,7 @@ form:hover {
     transform: translateY(0);
 }
 
-/* Mejoras para campos de contraseña */
+/* Campos de contraseña */
 .password-field {
     position: relative;
 }
@@ -171,7 +169,6 @@ form:hover {
     margin: 0;
 }
 
-/* Agregar al final del CSS existente */
 .text-danger {
     color: #ff6b6b !important;
     font-size: 0.875rem;

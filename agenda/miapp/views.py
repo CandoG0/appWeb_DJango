@@ -9,8 +9,6 @@ from datetime import datetime
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 
-# from miapp.forms import CarreraForm, EstudianteForm
-# from miapp.models import Carrera, Estudiante
 # Create your views here.
 
 
@@ -154,7 +152,7 @@ def tareas_pendientes(request):
     hoy = timezone.now().date()
     fecha_inicio = hoy + timedelta(days=3)
 
-    # Podemos establecer un límite opcional, por ejemplo 30 días en el futuro
+    # Establecer un límite opcional, por ejemplo 30 días en el futuro
     fecha_fin = hoy + timedelta(days=30)
 
     # Filtrar tareas del usuario actual que vencen en 3 días o más
@@ -432,7 +430,7 @@ def actualizar_estado(request, tarea_id):
             # GUARDAR COMENTARIO SI EXISTE - ¡CORREGIDO!
             if (
                 comentario
-            ):  # ¡Aquí estaba el error! Usar 'comentario' no 'comentario_texto'
+            ): 
                 ComentarioTarea.objects.create(
                     tarea=tarea,
                     usuario=usuario,
@@ -467,7 +465,6 @@ def actualizar_estado(request, tarea_id):
 
         except Exception as e:
             messages.error(request, f"Error al actualizar el estado: {str(e)}")
-            # También podrías loguear el error para debug
             import logging
 
             logger = logging.getLogger(__name__)
@@ -484,12 +481,11 @@ def calendario_view(request):
 
     if not usuario_id:
         # Redirigir a login si no está autenticado
-        return redirect("login")  # Ajusta al nombre de tu URL de login
+        return redirect("login")
 
     return render(request, "miapp/calendario.html", {})
 
 
-# miapp/views.py
 @require_GET
 def tareas_calendario_api(request):
     """API para obtener tareas en formato JSON para el calendario"""
@@ -507,7 +503,7 @@ def tareas_calendario_api(request):
             usuario=usuario, fecha_entrega__isnull=False
         ).select_related(
             "estatus"
-        )  # Optimizar consulta
+        ) 
 
         # Convertir a formato FullCalendar
         eventos = []
@@ -592,7 +588,6 @@ def tareas_calendario_api(request):
 
         traceback.print_exc()  # Para ver el traceback completo
 
-        # Datos de ejemplo para que el calendario funcione mientras
         hoy = datetime.now().date()
         eventos_debug = [
             {

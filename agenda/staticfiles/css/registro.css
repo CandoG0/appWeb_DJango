@@ -2,7 +2,6 @@
     position: fixed;
     top: 2rem;
     left: 50px;
-    /* Ajustado para alinear con sidebar */
     font-size: 1.5rem;
     font-weight: 600;
     color: #374375;
@@ -32,7 +31,7 @@
     /* Más espacio para el título fijo */
 }
 
-/* Formulario mejorado */
+/* Formulario */
 .form-container {
     margin-top: 2rem;
     display: flex;
@@ -117,7 +116,7 @@ form:hover {
     transform: translateY(0);
 }
 
-/* Mejoras para campos de contraseña */
+/* Campos de contraseña */
 .password-field {
     position: relative;
 }

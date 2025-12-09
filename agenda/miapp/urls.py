@@ -13,14 +13,14 @@ urlpatterns = [
 
     path("tareas/vencer/", views.tareas_vencer, name="tareas_vencer"),
     path("tareas/pendientes/", views.tareas_pendientes, name="tareas_pendientes"),
-    path("tareas/completar/<int:tarea_id>/", views.marcar_completada, name="marcar_completada"),
     path("tareas/completadas/", views.tareas_completadas, name="tareas_completadas"),
     
     path("tareas/detalle/<int:tarea_id>/", views.detalle_tarea, name="detalle_tarea"),
-    
     path("tareas/editar/<int:tarea_id>/", views.editar_tarea, name="editar_tarea"),
-    path("tareas/actualizar/<int:tarea_id>/", views.actualizar_estado, name="actualizar_estado"),
     path("tareas/eliminar/<int:tarea_id>/", views.eliminar_tarea, name="eliminar_tarea"),
+
+    path("tareas/completar/<int:tarea_id>/", views.marcar_completada, name="marcar_completada"),
+    path("tareas/actualizar/<int:tarea_id>/", views.actualizar_estado, name="actualizar_estado"),
     
     path('calendario/', views.calendario_view, name='calendario'),
     path('api/tareas-calendario/', views.tareas_calendario_api, name='tareas_calendario_api'),

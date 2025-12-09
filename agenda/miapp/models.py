@@ -182,7 +182,6 @@ class Tarea(models.Model):
 
 
 class ComentarioTarea(models.Model):
-    """Modelo para comentarios/notas en tareas"""
     tarea = models.ForeignKey(
         'Tarea', 
         on_delete=models.CASCADE, 
@@ -196,8 +195,7 @@ class ComentarioTarea(models.Model):
     contenido = models.TextField()
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
-    
-    # Opcional: tipo de comentario (general, seguimiento, etc.)
+
     TIPO_CHOICES = [
         ('gen', 'General'),
         ('seg', 'Seguimiento'),
@@ -220,7 +218,6 @@ class ComentarioTarea(models.Model):
     
     @property
     def tiempo_transcurrido(self):
-        """Devuelve el tiempo transcurrido desde la creación"""
         ahora = timezone.now()
         diferencia = ahora - self.fecha_creacion
         

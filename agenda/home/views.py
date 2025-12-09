@@ -72,7 +72,7 @@ def login(request):
                 request.session["usuario_id"] = usuario.id
                 request.session["usuario_nombre"] = usuario.nombre_completo
                 request.session["usuario_email"] = usuario.correo
-                #messages.success(request, f"¡Bienvenido de nuevo, {usuario.nombre}!")
+                messages.success(request, f"¡Bienvenido de nuevo, {usuario.nombre}!")
                 return redirect("index")
 
             except Usuario.DoesNotExist:
@@ -109,7 +109,6 @@ def registrar(request):
             )
             return redirect("login")
         else:
-            # El formulario mostrará los errores automáticamente
             messages.error(request, "Por favor corrige los errores en el formulario.")
     else:
         form = UsuarioRegistroForm()
