@@ -1,8 +1,45 @@
+.section-title {
+    position: fixed;
+    top: 2rem;
+    left: 320px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #374375;
+    margin: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 0.4s ease;
+}
+
+.section-title.hidden {
+    transform: translateY(-100px);
+}
+
+.back-arrow {
+    color: #374375;
+    text-decoration: none;
+    font-size: 1.3rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.back-arrow:hover {
+    color: #895159;
+    transform: translateX(-3px);
+}
+
+.hero-section {
+    margin-top: 50px;
+}
+
 .calendar-header {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     gap: 1rem;
     position: relative;
 }
