@@ -392,7 +392,7 @@
             });
         }
 
-        // Configurar fecha mínima para reprogramación (mañana)
+        // Configurar fecha mínima para reprogramación
         const nuevaFechaInput = document.getElementById('nuevaFecha');
         if (nuevaFechaInput) {
             const today = new Date();
@@ -402,7 +402,6 @@
             
             nuevaFechaInput.min = tomorrowStr;
             
-            // Sugerir fecha en 3 días
             const sugerida = new Date(today);
             sugerida.setDate(sugerida.getDate() + 3);
             const sugeridaStr = sugerida.toISOString().split('T')[0];
