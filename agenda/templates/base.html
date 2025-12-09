@@ -58,22 +58,26 @@
                     <!-- Submenú -->
                     <div class="submenu ps-4">
                         <a class="nav-link" href="{% url 'miapp:tareas_vencer' %}">
-                            <i class="bi bi-clock me-2"></i>Por vencer
+                            <i style="color: #E6B450;" class="bi bi-clock me-2"></i>Por vencer
                         </a>
                         <a class="nav-link" href="{% url 'miapp:tareas_pendientes' %}">
-                            <i class="bi bi-hourglass-split me-2"></i>Pendientes
+                            <i style="color: #895159;" class="bi bi-hourglass-split me-2"></i>Pendientes
                         </a>
                         <a class="nav-link" href="{% url 'miapp:tareas_completadas' %}">
-                            <i class="bi bi-check2-all me-2"></i>Completados
+                            <i style="color: #7A9C7A;" class="bi bi-check2-all me-2"></i>Completados
                         </a>
                     </div>
                 </div>
             </nav>
         </div>
 
-
         <div class="sidebar-footer">
             {% if request.session.usuario_id %}
+            <!-- Editar Perfil -->
+            <a class="nav-link" href="{% url 'miapp:perfil_usuario' %}">
+                <i class="bi bi-person-circle me-2"></i>
+                Editar Perfil
+            </a>
             <!-- Cerrar Sesión (abajo) -->
             <a class="nav-link" href="{% url 'logout' %}">
                 <i class="bi bi-box-arrow-right me-2"></i>

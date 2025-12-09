@@ -322,38 +322,24 @@ def editar_tarea(request, tarea_id):
         tarea = Tarea.objects.get(id=tarea_id, usuario_id=usuario_id)
 
         if request.method == "POST":
-            # Usar el formulario con los datos POST y la instancia de la tarea
-            form = TareaForm(request.POST, instance=tarea)
-
-            if form.is_valid():
-                # Guardar los cambios
-                tarea_editada = form.save(commit=False)
-                tarea_editada.usuario_id = usuario_id  # Mantener el usuario
-                tarea_editada.save()
-
+            # Obtener solo la nueva fecha de entrega
+            nueva_fecha = request.POST.get("fecha_entrega")
+            
+            if nueva_fecha:
+                # Actualizar solo la fecha de entrega
+                tarea.fecha_entrega = nueva_fecha
+                tarea.save()
+                
                 messages.success(
                     request,
-                    f'¡Tarea "{tarea_editada.nombre_tarea}" actualizada exitosamente!',
+                    f'¡Fecha de entrega de "{tarea.nombre_tarea}" actualizada exitosamente!',
                 )
                 return redirect("miapp:detalle_tarea", tarea_id=tarea_id)
             else:
-                messages.error(
-                    request, "Por favor corrige los errores en el formulario."
-                )
-        else:
-            # Método GET - mostrar formulario con datos actuales
-            form = TareaForm(instance=tarea)
+                messages.error(request, "Por favor selecciona una fecha válida.")
 
-        # Preparar el contexto para el template
-        context = {
-            "form": form,
-            "tarea": tarea,
-            "today": timezone.now().strftime("%Y-%m-d"),
-            "modo": "editar",
-        }
-
-        # Usar el mismo template que crear_tarea
-        return render(request, "miapp/crear_tarea.html", context)
+        # Redirigir de vuelta al detalle (el modal se maneja en el frontend)
+        return redirect("miapp:detalle_tarea", tarea_id=tarea_id)
 
     except Tarea.DoesNotExist:
         messages.error(
@@ -361,7 +347,7 @@ def editar_tarea(request, tarea_id):
         )
         return redirect("miapp:listar_tareas")
     except Exception as e:
-        messages.error(request, f"Error al editar la tarea: {e}")
+        messages.error(request, f"Error al reprogramar la tarea: {e}")
         return redirect("miapp:listar_tareas")
 
 
@@ -622,3 +608,47 @@ def tareas_calendario_api(request):
             },
         ]
         return JsonResponse(eventos_debug, safe=False)
+    
+def perfil_usuario(request):
+    # Verificar que el usuario esté logueado
+    if "usuario_id" not in request.session:
+        messages.error(request, "Debes iniciar sesión para ver tu perfil.")
+        return redirect("login")
+
+    # Obtener el usuario actual
+    usuario_id = request.session["usuario_id"]
+    usuario = Usuario.objects.get(id=usuario_id)
+
+    edit_mode = request.GET.get('edit') == 'true' or request.method == 'POST'
+
+    if request.method == "POST":
+        # Actualizar los datos del usuario
+        usuario.nombre = request.POST.get("nombre", usuario.nombre)
+        usuario.appat = request.POST.get("appat", usuario.appat)
+        usuario.apmat = request.POST.get("apmat", usuario.apmat)
+        usuario.nombre_usuario = request.POST.get("nombre_usuario", usuario.nombre_usuario)
+        usuario.correo = request.POST.get("correo", usuario.correo)
+        usuario.fecha_nacimiento = request.POST.get("fecha_nacimiento", usuario.fecha_nacimiento)
+        
+        # Si se proporciona una nueva contraseña
+        nueva_contrasenia = request.POST.get("contrasenia")
+        if nueva_contrasenia:
+            usuario.contrasenia = nueva_contrasenia
+        
+        try:
+            usuario.save()
+            # Actualizar la sesión con los nuevos datos
+            request.session['usuario_nombre'] = f"{usuario.nombre} {usuario.appat}"
+            request.session['usuario_email'] = usuario.correo
+            
+            messages.success(request, "Perfil actualizado correctamente.")
+            edit_mode = False
+        except Exception as e:
+            messages.error(request, f"Error al actualizar el perfil: {str(e)}")
+
+    context = {
+        "usuario": usuario,
+        "edit_mode": edit_mode
+    }
+    
+    return render(request, "miapp/perfil_usuario.html", context)

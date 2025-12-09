@@ -180,9 +180,10 @@
                         </button>
                         {% endif %}
 
-                        <a href="{% url 'miapp:editar_tarea' tarea.id %}" class="btn btn-primary btn-lg">
-                            Editar Tarea
-                        </a>
+                        <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal"
+                            data-bs-target="#modalReprogramar">
+                            Reprogramar Tarea
+                        </button>
 
                         <button type="button" class="btn btn-outline-danger btn-lg" data-bs-toggle="modal"
                             data-bs-target="#modalEliminar">
@@ -227,6 +228,52 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Reprogramar Tarea -->
+<div class="modal fade" id="modalReprogramar" tabindex="-1" aria-labelledby="modalReprogramarLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'miapp:editar_tarea' tarea.id %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalReprogramarLabel">
+                        Reprogramar Tarea
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    
+                    <div class="mb-3">
+                        <label for="fechaActual" class="form-label">Fecha de entrega actual</label>
+                        <input type="text" class="form-control" id="fechaActual" 
+                               value="{{ tarea.fecha_entrega|date:'d/m/Y' }}" readonly style="background-color: #f8f9fa;">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="nuevaFecha" class="form-label">
+                            <strong>Nueva fecha de entrega</strong>
+                        </label>
+                        <input type="date" class="form-control" id="nuevaFecha" name="fecha_entrega" 
+                               min="{% now 'Y-m-d' %}" required>
+                        <small class="form-text text-muted">Selecciona la nueva fecha límite</small>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <small>Solo se actualizará la fecha de entrega. El resto de la información permanecerá igual.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">
+                        Reprogramar
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -344,6 +391,25 @@
                 }
             });
         }
+
+        // Configurar fecha mínima para reprogramación (mañana)
+        const nuevaFechaInput = document.getElementById('nuevaFecha');
+        if (nuevaFechaInput) {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+            
+            nuevaFechaInput.min = tomorrowStr;
+            
+            // Sugerir fecha en 3 días
+            const sugerida = new Date(today);
+            sugerida.setDate(sugerida.getDate() + 3);
+            const sugeridaStr = sugerida.toISOString().split('T')[0];
+            nuevaFechaInput.value = sugeridaStr;
+        }
     });
+
+    
 </script>
 {% endblock %}

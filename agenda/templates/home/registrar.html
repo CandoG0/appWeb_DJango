@@ -18,105 +18,278 @@
 
     <!-- Formulario de registro -->
     <div class="form-container">
-
-        <form action="" method="post">
-            {% csrf_token %}
-
-            <p class="form-intro">Por favor, ingresa tus datos</p>
-
-            {% if form.non_field_errors %}
-            <div class="alert alert-danger">
-                {% for error in form.non_field_errors %}
-                {{ error }}
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            <div class="mb-3">
-                <label for="id_nombre" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="id_nombre" name="nombre" placeholder="Tu nombre"
-                    value="{{ form.nombre.value|default:'' }}" required>
-                {% if form.nombre.errors %}
-                <div class="text-danger small">{{ form.nombre.errors.0 }}</div>
+        <div class="registro-card">
+            <div class="registro-body">
+                <!-- Mensajes de alerta -->
+                {% if messages %}
+                <div class="alert-messages">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
                 {% endif %}
-            </div>
 
-            <div class="mb-3">
-                <label for="id_appat" class="form-label">Apellido Paterno</label>
-                <input type="text" class="form-control" id="id_appat" name="appat" placeholder="Apellido paterno"
-                    value="{{ form.appat.value|default:'' }}" required>
-                {% if form.appat.errors %}
-                <div class="text-danger small">{{ form.appat.errors.0 }}</div>
+                {% if form.non_field_errors %}
+                <div class="alert alert-error">
+                    {% for error in form.non_field_errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
                 {% endif %}
-            </div>
 
-            <div class="mb-3">
-                <label for="id_apmat" class="form-label">Apellido Materno</label>
-                <input type="text" class="form-control" id="id_apmat" name="apmat" placeholder="Apellido materno"
-                    value="{{ form.apmat.value|default:'' }}" required>
-                {% if form.apmat.errors %}
-                <div class="text-danger small">{{ form.apmat.errors.0 }}</div>
-                {% endif %}
-            </div>
+                <h4 class="registro-title">
+                    ¡Bienvenido! Por favor registra tus datos
+                </h4>
 
-            <div class="mb-3">
-                <label for="id_nombre_usuario" class="form-label">Nombre de usuario</label>
-                <input type="text" class="form-control" id="id_nombre_usuario" name="nombre_usuario"
-                    placeholder="Nombre de usuario único" value="{{ form.nombre_usuario.value|default:'' }}" required>
-                {% if form.nombre_usuario.errors %}
-                <div class="text-danger small">{{ form.nombre_usuario.errors.0 }}</div>
-                {% endif %}
-            </div>
+                <form action="" method="post" id="registroForm">
+                    {% csrf_token %}
 
-            <div class="mb-3">
-                <label for="id_fecha_nacimiento" class="form-label">Fecha de nacimiento</label>
-                <input type="date" class="form-control" id="id_fecha_nacimiento" name="fecha_nacimiento"
-                    value="{{ form.fecha_nacimiento.value|default:'' }}" required>
-                {% if form.fecha_nacimiento.errors %}
-                <div class="text-danger small">{{ form.fecha_nacimiento.errors.0 }}</div>
-                {% endif %}
-            </div>
+                    <div class="form-grid">
+                        <!-- Nombre -->
+                        <div class="form-group">
+                            <label for="id_nombre" class="form-label">
+                                <i class="bi bi-person"></i>
+                                Nombre
+                            </label>
+                            <input type="text" class="form-control" id="id_nombre" name="nombre" placeholder="Tu nombre"
+                                value="{{ form.nombre.value|default:'' }}" required>
+                            {% if form.nombre.errors %}
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ form.nombre.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
 
-            <div class="mb-3">
-                <label for="id_correo" class="form-label">Correo electrónico</label>
-                <input type="email" class="form-control" id="id_correo" name="correo" placeholder="tu@ejemplo.com"
-                    value="{{ form.correo.value|default:'' }}" required>
-                {% if form.correo.errors %}
-                <div class="text-danger small">{{ form.correo.errors.0 }}</div>
-                {% endif %}
-            </div>
+                        <!-- Apellidos (campo combinado) -->
+                        <div class="form-group">
+                            <label for="id_apellidos" class="form-label">
+                                <i class="bi bi-person-vcard"></i>
+                                Apellidos
+                            </label>
+                            <input type="text" class="form-control" id="id_apellidos"
+                                placeholder="Apellido paterno y materno (opcional)"
+                                value="{{ form.appat.value|default:'' }} {{ form.apmat.value|default:'' }}">
+                            <small class="form-text">Ingresa ambos apellidos separados por espacio</small>
 
-            <div class="mb-3 password-field">
-                <label for="id_contrasenia" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="id_contrasenia" name="contrasenia"
-                    placeholder="Crea una contraseña segura" required>
-                {% if form.contrasenia.errors %}
-                <div class="text-danger small">{{ form.contrasenia.errors.0 }}</div>
-                {% endif %}
-            </div>
+                            <!-- Campos ocultos para apellidos -->
+                            <input type="hidden" id="id_appat" name="appat" value="{{ form.appat.value|default:'' }}">
+                            <input type="hidden" id="id_apmat" name="apmat" value="{{ form.apmat.value|default:'' }}">
 
-            <div class="mb-3 password-field">
-                <label for="id_confirmar_contrasenia" class="form-label">Confirmar contraseña</label>
-                <input type="password" class="form-control" id="id_confirmar_contrasenia" name="confirmar_contrasenia"
-                    placeholder="Repite tu contraseña" required>
-                {% if form.confirmar_contrasenia.errors %}
-                <div class="text-danger small">{{ form.confirmar_contrasenia.errors.0 }}</div>
-                {% endif %}
-            </div>
+                            {% if form.appat.errors %}
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ form.appat.errors.0 }}
+                            </div>
+                            {% endif %}
+                            {% if form.apmat.errors %}
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ form.apmat.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
 
-            <div class="d-grid gap-2">
-                <button class="btn btn-primary-custom" type="submit">
-                    <i class="bi bi-person-plus me-2"></i>Crear Cuenta
-                </button>
-            </div>
+                        <!-- Nombre de Usuario -->
+                        <div class="form-group">
+                            <label for="id_nombre_usuario" class="form-label">
+                                <i class="bi bi-at"></i>
+                                Nombre de Usuario
+                            </label>
+                            <input type="text" class="form-control" id="id_nombre_usuario" name="nombre_usuario"
+                                placeholder="Nombre de usuario único" value="{{ form.nombre_usuario.value|default:'' }}"
+                                required>
+                            {% if form.nombre_usuario.errors %}
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ form.nombre_usuario.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
 
-            <div class="text-center mt-3">
-                <small style="color: #DFAEA1;">
-                    ¿Ya tienes cuenta? <a href="{% url 'login' %}"
-                        style="color: #FFFCF5; text-decoration: underline;">Inicia sesión aquí</a>
-                </small>
+                        <!-- Fecha de Nacimiento -->
+                        <div class="form-group">
+                            <label for="id_fecha_nacimiento" class="form-label">
+                                <i class="bi bi-calendar-date"></i>
+                                Fecha de Nacimiento
+                            </label>
+                            <input type="date" class="form-control" id="id_fecha_nacimiento" name="fecha_nacimiento"
+                                value="{{ form.fecha_nacimiento.value|default:'' }}" required>
+                            {% if form.fecha_nacimiento.errors %}
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ form.fecha_nacimiento.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Correo Electrónico -->
+                        <div class="form-group">
+                            <label for="id_correo" class="form-label">
+                                <i class="bi bi-envelope"></i>
+                                Correo Electrónico
+                            </label>
+                            <input type="email" class="form-control" id="id_correo" name="correo"
+                                placeholder="tu@ejemplo.com" value="{{ form.correo.value|default:'' }}" required>
+                            {% if form.correo.errors %}
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ form.correo.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Contraseña -->
+                        <div class="form-group">
+                            <label for="id_contrasenia" class="form-label">
+                                <i class="bi bi-key"></i>
+                                Contraseña
+                            </label>
+                            <div class="password-field">
+                                <input type="password" class="form-control" id="id_contrasenia" name="contrasenia"
+                                    placeholder="Crea una contraseña segura" required>
+                                <button type="button" class="password-toggle"
+                                    onclick="togglePassword('id_contrasenia')">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            {% if form.contrasenia.errors %}
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ form.contrasenia.errors.0 }}
+                            </div>
+                            {% endif %}
+                            <small class="form-text"></small>
+                        </div>
+
+                        <!-- Confirmar Contraseña -->
+                        <div class="form-group">
+                            <label for="id_confirmar_contrasenia" class="form-label">
+                                <i class="bi bi-key-fill"></i>
+                                Confirmar Contraseña
+                            </label>
+                            <div class="password-field">
+                                <input type="password" class="form-control" id="id_confirmar_contrasenia"
+                                    name="confirmar_contrasenia" placeholder="Repite tu contraseña" required>
+                                <button type="button" class="password-toggle"
+                                    onclick="togglePassword('id_confirmar_contrasenia')">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            {% if form.confirmar_contrasenia.errors %}
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ form.confirmar_contrasenia.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn-registro" type="submit">
+                            <i class="bi bi-person-plus me-2"></i>
+                            Crear Cuenta
+                        </button>
+
+                        <div class="login-link">
+                            <small>
+                                ¿Ya tienes cuenta?
+                                <a href="{% url 'login' %}">Inicia sesión aquí</a>
+                            </small>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
+
+<script>
+    // Función para mostrar/ocultar contraseña
+    function togglePassword(inputId) {
+        const input = document.getElementById(inputId);
+        const toggleButton = input.parentNode.querySelector('.password-toggle');
+        const icon = toggleButton.querySelector('i');
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        }
+    }
+
+    // Separar apellidos automáticamente
+    document.addEventListener('DOMContentLoaded', function () {
+        const apellidosInput = document.getElementById('id_apellidos');
+        const appatInput = document.getElementById('id_appat');
+        const apmatInput = document.getElementById('id_apmat');
+
+        if (apellidosInput && appatInput && apmatInput) {
+            // Separar apellidos cuando el usuario termina de escribir
+            apellidosInput.addEventListener('blur', function () {
+                const apellidos = this.value.trim();
+                if (apellidos) {
+                    // Separar por espacios
+                    const partes = apellidos.split(' ');
+
+                    // Primer parte es apellido paterno
+                    if (partes.length >= 1) {
+                        appatInput.value = partes[0];
+                    }
+
+                    // Resto es apellido materno (puede tener espacios, como "de la Rosa")
+                    if (partes.length >= 2) {
+                        apmatInput.value = partes.slice(1).join(' ');
+                    }
+                } else {
+                    // Limpiar si no hay apellidos
+                    appatInput.value = '';
+                    apmatInput.value = '';
+                }
+
+                // Mostrar confirmación visual
+                if (appatInput.value || apmatInput.value) {
+                    this.style.borderColor = '#7A9C7A';
+                    this.style.backgroundColor = 'rgba(122, 156, 122, 0.1)';
+                }
+            });
+
+            // Actualizar campo combinado si ya hay valores en los ocultos
+            if (appatInput.value || apmatInput.value) {
+                let apellidosCombinados = '';
+                if (appatInput.value) apellidosCombinados += appatInput.value;
+                if (apmatInput.value) apellidosCombinados += ' ' + apmatInput.value;
+                apellidosInput.value = apellidosCombinados.trim();
+            }
+        }
+
+        // Validación de contraseñas coincidentes
+        const contraseniaInput = document.getElementById('id_contrasenia');
+        const confirmarInput = document.getElementById('id_confirmar_contrasenia');
+
+        function validatePasswords() {
+            if (contraseniaInput.value && confirmarInput.value) {
+                if (contraseniaInput.value !== confirmarInput.value) {
+                    confirmarInput.setCustomValidity('Las contraseñas no coinciden');
+                    confirmarInput.style.borderColor = '#c44545';
+                } else {
+                    confirmarInput.setCustomValidity('');
+                    confirmarInput.style.borderColor = '#BABDE2';
+                }
+            }
+        }
+
+        if (contraseniaInput && confirmarInput) {
+            contraseniaInput.addEventListener('input', validatePasswords);
+            confirmarInput.addEventListener('input', validatePasswords);
+        }
+
+    });
+</script>
 {% endblock %}

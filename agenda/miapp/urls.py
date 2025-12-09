@@ -24,5 +24,5 @@ urlpatterns = [
     
     path('calendario/', views.calendario_view, name='calendario'),
     path('api/tareas-calendario/', views.tareas_calendario_api, name='tareas_calendario_api'),
-    
+    path('editar-perfil/', views.perfil_usuario, name='perfil_usuario'),
 ]

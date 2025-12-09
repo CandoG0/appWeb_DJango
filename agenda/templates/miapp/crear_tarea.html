@@ -1,9 +1,7 @@
 {% extends "forms.html" %}
 {% load static %}
 
-{% block title %}
-{% if modo == "editar" %}Agenda - Editar Tarea{% else %}Agenda - Crear Tarea{% endif %}
-{% endblock title %}
+{% block title %}Agenda - Crear Tarea{% endblock title %}
 
 {% block extra_css %}
 <link href="{% static 'css/crearTarea.css' %}" rel="stylesheet">
@@ -12,126 +10,231 @@
 {% block content %}
 <div class="hero-section">
     <h2 class="section-title">
-        <a href="{% if modo == 'editar' %}{% url 'miapp:detalle_tarea' tarea.id %}{% else %}{% url 'miapp:listar_tareas' %}{% endif %}" 
-           class="back-arrow" title="Regresar">
+        <a href="{% url 'miapp:listar_tareas' %}" class="back-arrow" title="Regresar">
             <i class="bi bi-arrow-left"></i>
         </a>
-        {% if modo == "editar" %}Editar Tarea{% else %}Crear Nueva Tarea{% endif %}
+        Crear Nueva Tarea
     </h2>
 
+    <!-- Formulario de tarea -->
     <div class="form-container">
-        <form action="" method="post">
-            {% csrf_token %}
-
-            <p class="form-intro">
-                {% if modo == "editar" %}
-                    Modifica los datos de la tarea
-                {% else %}
-                    Por favor registra los datos de la tarea
+        <div class="tarea-card">
+            <div class="tarea-body">
+                <!-- Mensajes de alerta -->
+                {% if messages %}
+                <div class="alert-messages">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
                 {% endif %}
-            </p>
 
-            <!-- Mostrar mensajes -->
-            {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-            {% endfor %}
-            {% endif %}
-
-            <!-- Mostrar errores del formulario -->
-            {% if form.non_field_errors %}
-            <div class="alert alert-danger">
-                {% for error in form.non_field_errors %}
-                {{ error }}
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            <div class="mb-3">
-                <label for="id_nombre_tarea" class="form-label">Nombre de la tarea</label>
-                <input type="text" class="form-control" id="id_nombre_tarea" name="nombre_tarea"
-                    placeholder="Investigación acerca de..." value="{{ form.nombre_tarea.value|default:'' }}" required>
-                {% if form.nombre_tarea.errors %}
-                <div class="text-danger small">{{ form.nombre_tarea.errors.0 }}</div>
+                {% if form.non_field_errors %}
+                <div class="alert alert-error">
+                    {% for error in form.non_field_errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
                 {% endif %}
-            </div>
 
-            <div class="mb-3">
-                <label for="id_descripcion_tarea" class="form-label">Descripción de la tarea</label>
-                <textarea class="form-control" id="id_descripcion_tarea" name="descripcion_tarea" rows="3"
-                    placeholder="Buscar información acerca de...">{{ form.descripcion_tarea.value|default:'' }}</textarea>
-                {% if form.descripcion_tarea.errors %}
-                <div class="text-danger small">{{ form.descripcion_tarea.errors.0 }}</div>
-                {% endif %}
-            </div>
+                <h4 class="tarea-title">
+                    Crear una nueva Tarea
+                </h4>
 
-            <div class="mb-3">
-                <label for="id_asignatura" class="form-label">Asignatura</label>
-                <input type="text" class="form-control" id="id_asignatura" name="asignatura"
-                    placeholder="Programación Web" value="{{ form.asignatura.value|default:'' }}">
-                {% if form.asignatura.errors %}
-                <div class="text-danger small">{{ form.asignatura.errors.0 }}</div>
-                {% endif %}
-            </div>
+                <form action="" method="post" id="tareaForm">
+                    {% csrf_token %}
 
-            <div class="mb-3">
-                <label for="id_fecha_entrega" class="form-label">Fecha de entrega</label>
-                <input type="date" class="form-control" id="id_fecha_entrega" name="fecha_entrega"
-                    value="{{ form.fecha_entrega.value|default:'' }}" min="{{ today }}" required>
-                {% if form.fecha_entrega.errors %}
-                <div class="text-danger small">{{ form.fecha_entrega.errors.0 }}</div>
-                {% endif %}
-            </div>
+                    <div class="form-grid">
+                        <!-- Nombre de la tarea -->
+                        <div class="form-group">
+                            <label for="id_nombre_tarea" class="form-label">
+                                <i class="bi bi-card-heading"></i>
+                                Nombre de la tarea
+                            </label>
+                            <input type="text" class="form-control" id="id_nombre_tarea" name="nombre_tarea"
+                                placeholder="Ej: Investigación de Programación Web"
+                                value="{{ form.nombre_tarea.value|default:'' }}" required>
+                            {% if form.nombre_tarea.errors %}
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ form.nombre_tarea.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
 
-            <div class="mb-3">
-                <label for="id_prioridad" class="form-label">Prioridad</label>
-                <select class="form-select" id="id_prioridad" name="prioridad" required>
-                    <option value="">Seleccionar prioridad</option>
-                    <option value="alt">Alta</option>
-                    <option value="med">Media</option>
-                    <option value="baj">Baja</option>
-                </select>
-                {% if form.prioridad.errors %}
-                <div class="text-danger small">{{ form.prioridad.errors.0 }}</div>
-                {% endif %}
-            </div>
+                        <!-- Asignatura -->
+                        <div class="form-group">
+                            <label for="id_asignatura" class="form-label">
+                                <i class="bi bi-book"></i>
+                                Asignatura
+                            </label>
+                            <input type="text" class="form-control" id="id_asignatura" name="asignatura"
+                                placeholder="Ej: Programación Web, Matemáticas, etc."
+                                value="{{ form.asignatura.value|default:'' }}">
+                            {% if form.asignatura.errors %}
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ form.asignatura.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
 
-            <div class="mb-3">
-                <label for="id_modalidad" class="form-label">Modalidad</label>
-                <select class="form-select" id="id_modalidad" name="modalidad" required>
-                    <option value="">Seleccionar modalidad</option>
-                    <option value="ind">Individual</option>
-                    <option value="grup">En Grupo</option>
-                </select>
-                {% if form.modalidad.errors %}
-                <div class="text-danger small">{{ form.modalidad.errors.0 }}</div>
-                {% endif %}
-            </div>
+                        <!-- Fecha de entrega -->
+                        <div class="form-group">
+                            <label for="id_fecha_entrega" class="form-label">
+                                <i class="bi bi-calendar-check"></i>
+                                Fecha de entrega
+                            </label>
+                            <input type="date" class="form-control" id="id_fecha_entrega" name="fecha_entrega"
+                                value="{{ form.fecha_entrega.value|default:'' }}" required>
+                            {% if form.fecha_entrega.errors %}
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ form.fecha_entrega.errors.0 }}
+                            </div>
+                            {% endif %}
+                            <small class="form-text">Selecciona la fecha límite</small>
+                        </div>
 
-            <div class="d-grid gap-2">
-                <button class="btn btn-primary-custom" type="submit">
-                    <i class="bi bi-check-circle me-2"></i>
-                    {% if modo == "editar" %}Guardar Cambios{% else %}Registrar Tarea{% endif %}
-                </button>
+                        <!-- Prioridad -->
+                        <div class="form-group">
+                            <label for="id_prioridad" class="form-label">
+                                <i class="bi bi-flag"></i>
+                                Prioridad
+                            </label>
+                            <select class="form-control" id="id_prioridad" name="prioridad" required>
+                                <option value="">Selecciona una prioridad</option>
+                                <option value="alt">Alta</option>
+                                <option value="med">Media</option>
+                                <option value="baj">Baja</option>
+                            </select>
+                            {% if form.prioridad.errors %}
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ form.prioridad.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Modalidad -->
+                        <div class="form-group">
+                            <label for="id_modalidad" class="form-label">
+                                <i class="bi bi-people"></i>
+                                Modalidad
+                            </label>
+                            <select class="form-control" id="id_modalidad" name="modalidad" required>
+                                <option value="">Selecciona una modalidad</option>
+                                <option value="ind">Individual</option>
+                                <option value="grup">En Grupo</option>
+                            </select>
+                            {% if form.modalidad.errors %}
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ form.modalidad.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="form-group form-full-width">
+                            <label for="id_descripcion_tarea" class="form-label">
+                                <i class="bi bi-text-paragraph"></i>
+                                Descripción de la tarea
+                            </label>
+                            <textarea class="form-control" id="id_descripcion_tarea" name="descripcion_tarea" rows="4"
+                                placeholder="Describe los detalles de la tarea...">{{ form.descripcion_tarea.value|default:'' }}</textarea>
+                            {% if form.descripcion_tarea.errors %}
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ form.descripcion_tarea.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn-tarea" type="submit">
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Crear Tarea
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
+
 <script>
-    // Script para mostrar valores por defecto en selects
-    document.addEventListener('DOMContentLoaded', function() {
-        // Establecer valores de los selects si el form tiene datos
+    // Establecer valores de los selects si el form tiene datos
+    document.addEventListener('DOMContentLoaded', function () {
         const prioridadValue = "{{ form.prioridad.value|default:'' }}";
         const modalidadValue = "{{ form.modalidad.value|default:'' }}";
-        
+
         if (prioridadValue) {
             document.getElementById('id_prioridad').value = prioridadValue;
         }
-        
+
         if (modalidadValue) {
             document.getElementById('id_modalidad').value = modalidadValue;
+        }
+
+        // Establecer fecha mínima como hoy
+        const today = new Date().toISOString().split('T')[0];
+        const fechaInput = document.getElementById('id_fecha_entrega');
+        if (fechaInput && !fechaInput.value) {
+            fechaInput.min = today;
+
+            // Sugerir fecha de mañana como predeterminada
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+            fechaInput.value = tomorrowStr;
+        }
+
+        // Cambiar color del select según prioridad
+        const prioridadSelect = document.getElementById('id_prioridad');
+        if (prioridadSelect) {
+            prioridadSelect.addEventListener('change', function () {
+                switch (this.value) {
+                    case 'alt':
+                        this.style.borderColor = '#c44545';
+                        this.style.backgroundColor = 'rgba(196, 69, 69, 0.1)';
+                        break;
+                    case 'med':
+                        this.style.borderColor = '#E6B450';
+                        this.style.backgroundColor = 'rgba(230, 180, 80, 0.1)';
+                        break;
+                    case 'baj':
+                        this.style.borderColor = '#7A9C7A';
+                        this.style.backgroundColor = 'rgba(122, 156, 122, 0.1)';
+                        break;
+                    default:
+                        this.style.borderColor = '#BABDE2';
+                        this.style.backgroundColor = '#FFFCF5';
+                }
+            });
+
+            // Disparar evento para aplicar estilo inicial
+            prioridadSelect.dispatchEvent(new Event('change'));
+        }
+
+        // Cambiar color del select según modalidad
+        const modalidadSelect = document.getElementById('id_modalidad');
+        if (modalidadSelect) {
+            modalidadSelect.addEventListener('change', function () {
+                if (this.value === 'grup') {
+                    this.style.borderColor = '#895159';
+                    this.style.backgroundColor = 'rgba(137, 81, 89, 0.1)';
+                } else {
+                    this.style.borderColor = '#BABDE2';
+                    this.style.backgroundColor = '#FFFCF5';
+                }
+            });
+
+            // Disparar evento para aplicar estilo inicial
+            modalidadSelect.dispatchEvent(new Event('change'));
         }
     });
 </script>

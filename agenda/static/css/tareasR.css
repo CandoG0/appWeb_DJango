@@ -104,7 +104,8 @@
     background-color: #973636 !important;
     border-color: #973636 !important;
 }
-/* AGREGADO: Diseño de tarjetas compactas */
+
+/* Diseño de tarjetas compactas */
 .tareas-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -185,7 +186,7 @@
     padding: 0.25rem 0.5rem;
 }
 
-/* Botones de acción en tarjetas - Compactos */
+/* Botones de acción en tarjetas */
 .card-link {
     color: #895159;
     text-decoration: none;

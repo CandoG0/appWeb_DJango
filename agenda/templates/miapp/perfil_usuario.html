@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Agenda - Perfil{% endblock title %}
+
+{% block extra_css %}
+<link href="{% static 'css/perfil.css' %}" rel="stylesheet">
+<style>
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <!-- Encabezado fijo a la izquierda superior -->
+    <h2 class="section-title">
+        <a href="javascript:history.back()" class="back-arrow" title="Regresar">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        Perfil de usuario
+    </h2>
+</div>
+
+<div class="perfil-section">
+    <!-- Mensajes de alerta -->
+    {% if messages %}
+    <div class="mb-4">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="perfil-card">
+        {% if not edit_mode %}
+        <div class="perfil-header">
+            <div class="perfil-avatar">
+                <i class="bi bi-person-circle"></i>
+            </div>
+            <h3 class="mb-2">{{ usuario.nombre_completo }}</h3>
+            <p class="mb-0">@{{ usuario.nombre_usuario }}</p>
+        </div>
+        {% endif %}
+        <div class="perfil-body">
+            <!-- Modo visualización -->
+            {% if not edit_mode %}
+            <div class="mb-4">
+                <h5 class="section-title-info">
+                    <i class="bi bi-person-vcard"></i>
+                    Información Personal
+                </h5>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-person"></i>
+                            Nombre
+                        </div>
+                        <div class="info-value">{{ usuario.nombre }}</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-person-vcard"></i>
+                            Apellido Paterno
+                        </div>
+                        <div class="info-value">{{ usuario.appat }}</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-person-vcard"></i>
+                            Apellido Materno
+                        </div>
+                        <div class="info-value">{{ usuario.apmat }}</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-calendar-date"></i>
+                            Fecha de Nacimiento
+                        </div>
+                        <div class="info-value">{{ usuario.fecha_nacimiento|date:"d/m/Y" }}</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-envelope"></i>
+                            Correo Electrónico
+                        </div>
+                        <div class="info-value">{{ usuario.correo }}</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-at"></i>
+                            Nombre de Usuario
+                        </div>
+                        <div class="info-value">{{ usuario.nombre_usuario }}</div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="?edit=true" class="btn-editar">
+                        <i class="bi bi-pencil-square"></i>
+                        Editar Perfil
+                    </a>
+                </div>
+            </div>
+
+            {% else %}
+            <!-- Modo edición -->
+            <div class="mb-4">
+                <h5 class="section-title-info">
+                    <i class="bi bi-pencil-square"></i>
+                    Editar Perfil
+                </h5>
+
+                <form method="POST" class="form-perfil">
+                    {% csrf_token %}
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nombre" class="form-label">
+                                <i class="bi bi-person"></i>
+                                Nombre
+                            </label>
+                            <input type="text" class="form-control" id="nombre" name="nombre"
+                                value="{{ usuario.nombre }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="appat" class="form-label">
+                                <i class="bi bi-person-vcard"></i>
+                                Apellido Paterno
+                            </label>
+                            <input type="text" class="form-control" id="appat" name="appat" value="{{ usuario.appat }}"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="apmat" class="form-label">
+                                <i class="bi bi-person-vcard"></i>
+                                Apellido Materno
+                            </label>
+                            <input type="text" class="form-control" id="apmat" name="apmat" value="{{ usuario.apmat }}"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fecha_nacimiento" class="form-label">
+                                <i class="bi bi-calendar-date"></i>
+                                Fecha de Nacimiento
+                            </label>
+                            <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento"
+                                value="{{ usuario.fecha_nacimiento|date:'Y-m-d' }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nombre_usuario" class="form-label">
+                                <i class="bi bi-at"></i>
+                                Nombre de Usuario
+                            </label>
+                            <input type="text" class="form-control" id="nombre_usuario" name="nombre_usuario"
+                                value="{{ usuario.nombre_usuario }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="correo" class="form-label">
+                                <i class="bi bi-envelope"></i>
+                                Correo Electrónico
+                            </label>
+                            <input type="email" class="form-control" id="correo" name="correo"
+                                value="{{ usuario.correo }}" required>
+                        </div>
+
+                        <div class="form-group form-full-width">
+                            <label for="contrasenia" class="form-label">
+                                <i class="bi bi-key"></i>
+                                Nueva Contraseña (opcional)
+                            </label>
+                            <input type="password" class="form-control" id="contrasenia" name="contrasenia"
+                                placeholder="Dejar en blanco para no cambiar">
+                            <small class="form-text text-muted mt-1" style="color: #895159; font-size: 0.85rem;">
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="{% url 'miapp:perfil_usuario' %}" class="btn-cancelar">
+                            <i class="bi bi-x-circle"></i>
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn-editar">
+                            <i class="bi bi-save"></i>
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Script al scrollear se oculta el header
+    let lastScrollY = window.scrollY;
+    const sectionTitle = document.querySelector('.section-title');
+    let ticking = false;
+
+    function updateHeader() {
+        if (window.scrollY > lastScrollY && window.scrollY > 100) {
+            sectionTitle.classList.add('hidden');
+        } else {
+            sectionTitle.classList.remove('hidden');
+        }
+        lastScrollY = window.scrollY;
+        ticking = false;
+    }
+
+    function onScroll() {
+        if (!ticking) {
+            requestAnimationFrame(updateHeader);
+            ticking = true;
+        }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Mostrar header al hacer hover cerca del top
+    document.addEventListener('mousemove', (e) => {
+        if (e.clientY < 100 && sectionTitle.classList.contains('hidden')) {
+            sectionTitle.classList.remove('hidden');
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Verificar si estamos en modo edición desde la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const editMode = urlParams.get('edit');
+
+        if (editMode === 'true') {
+            // Enfocar el primer campo del formulario
+            const firstInput = document.querySelector('input');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }
+
+        // Validación de fecha de nacimiento
+        const fechaInput = document.getElementById('fecha_nacimiento');
+        if (fechaInput) {
+            fechaInput.addEventListener('change', function () {
+                const selectedDate = new Date(this.value);
+                const today = new Date();
+                const minDate = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
+                const maxDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
+
+                if (selectedDate > maxDate) {
+                    alert('Debes tener al menos 13 años.');
+                    this.value = '';
+                } else if (selectedDate < minDate) {
+                    alert('Fecha de nacimiento no válida.');
+                    this.value = '';
+                }
+            });
+        }
+
+        // Validación de contraseña
+        const contraseniaInput = document.getElementById('contrasenia');
+        if (contraseniaInput) {
+            contraseniaInput.addEventListener('blur', function () {
+                if (this.value && this.value.length < 8) {
+                    alert('La contraseña debe tener al menos 8 caracteres.');
+                    this.focus();
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
