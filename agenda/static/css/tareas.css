@@ -4,7 +4,7 @@
     left: 320px;
     font-size: 1.5rem;
     font-weight: 600;
-    color: #374375;
+    color: #FFFCF5;
     margin: 0;
     z-index: 100;
     display: flex;
@@ -19,7 +19,7 @@
 }
 
 .back-arrow {
-    color: #374375;
+    color: #FFFCF5;
     text-decoration: none;
     font-size: 1.3rem;
     transition: all 0.3s ease;
@@ -28,7 +28,7 @@
 }
 
 .back-arrow:hover {
-    color: #895159;
+    color: #374375;
     transform: translateX(-3px);
 }
 
@@ -37,13 +37,13 @@
     /* Espacio para el título fijo */
 }
 
-/* Barra de navegacion mejorada */
+/* Barra de navegacion */
 .barra-navegacion {
     margin-bottom: 1rem;
 }
 
 .nav-link {
-    color: #6c757d !important;
+    color: #FFFCF5 !important;
     /* Color más suave por defecto */
     font-weight: 500;
     padding: 0.5rem 1rem;
@@ -54,13 +54,11 @@
 .nav-link:hover,
 .nav-link:focus {
     color: #895159 !important;
-    /* Color al hover */
     background-color: rgba(223, 174, 161, 0.1);
-    /* Fondo sutil al hover */
 }
 
 .nav-link.active {
-    color: #374375 !important;
+    color: #895159 !important;
     font-weight: 500;
     /* border-bottom: 3px solid #895159; */
     background-color: transparent;
@@ -74,8 +72,8 @@
 
 .btn-primary {
     border: none;
-    background-color: #374375;
-    color: white;
+    background-color: #FFFCF5;
+    color: #374375;
     font-weight: 600;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
@@ -84,8 +82,8 @@
 }
 
 .btn-primary:hover {
-    background-color: #f5ad99;
-    color: #374375;
+    background-color: #374375;
+    color: #FFFCF5;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
@@ -107,7 +105,6 @@
     margin-bottom: 0;
     color: white;
     background-color: #FFFCF5 !important;
-    /* Fuerza el fondo */
 }
 
 .table thead {
@@ -169,7 +166,7 @@
 
 /* Estados con colores */
 .estado-nuevo {
-    color: #D5D8F0;
+    color: #BABDE2;
     font-weight: 600;
 }
 
@@ -196,7 +193,7 @@
 }
 
 .stat-card .card-title {
-    color: #FFFCF5 !important;
+    color: #FFFCF5;
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
@@ -212,11 +209,11 @@
 }
 
 .tareas-pendientes{
-    background: #895159;
+    background: #E6B450;
 }
 
 .tareas-proceso{
-    background: #E6B8A8;
+    background: #BABDE2;
 }
 
 .tareas-completadas{
@@ -229,18 +226,18 @@
     padding: 0.375rem 0.75rem;
 }
 
-/* .text-warning{
+.text-warning{
     color: #FFFCF5 !important;
 }
 
 .text-info{
-    color: #FFFCF5 !important;
+    color: #374375 !important;
 }
 
 .text-success{
     color: #FFFCF5 !important;
 }
- */
+
 /* Estados mejorados */
 .estado-completado {
     color: #7A9C7A;

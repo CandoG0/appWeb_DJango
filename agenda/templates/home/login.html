@@ -16,92 +16,124 @@
         Iniciar Sesión
     </h2>
 
+    <!-- Formulario de login -->
     <div class="form-container">
-        <form action="" method="post">
-            {% csrf_token %}
-
-            <p class="form-intro">Bienvenido de nuevo</p>
-
-            <!-- Mostrar mensajes -->
-            {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-            {% endfor %}
-            {% endif %}
-
-            <div class="mb-3">
-                <label for="id_correo" class="form-label">Correo electrónico</label>
-                <input type="email" class="form-control" id="id_correo" name="correo" placeholder="tu@ejemplo.com"
-                    value="{{ form.correo.value|default:'' }}" required autocomplete="email">
-                {% if form.correo.errors %}
-                <div class="text-danger small">{{ form.correo.errors.0 }}</div>
+        <div class="login-card">
+            <div class="login-body">
+                <!-- Mensajes de alerta -->
+                {% if messages %}
+                <div class="alert-messages">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
                 {% endif %}
-            </div>
 
-            <div class="mb-3 password-field">
-                <label for="id_contrasenia" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="id_contrasenia" name="contrasenia"
-                    placeholder="Ingresa tu contraseña" required autocomplete="current-password">
-                <button type="button" class="password-toggle" title="Mostrar/ocultar contraseña">
-                    <i class="bi bi-eye"></i>
-                </button>
-                {% if form.contrasenia.errors %}
-                <div class="text-danger small">{{ form.contrasenia.errors.0 }}</div>
-                {% endif %}
-            </div>
+                <h4 class="login-title">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Bienvenido de nuevo
+                </h4>
 
-            <!-- Recordar usuario (opcional para sesiones) -->
-            <div class="remember-me">
-                <input type="checkbox" id="rememberMe" name="remember_me">
-                <label for="rememberMe">Recordar mi sesión</label>
-            </div>
+                <form action="" method="post" id="loginForm">
+                    {% csrf_token %}
 
-            <div class="d-grid gap-2">
-                <button class="btn btn-primary-custom" type="submit">
-                    <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
-                </button>
-            </div>
+                    <div class="form-grid">
+                        <!-- Correo electrónico -->
+                        <div class="form-group">
+                            <label for="id_correo" class="form-label">
+                                <i class="bi bi-envelope"></i>
+                                Correo electrónico
+                            </label>
+                            <input type="email" class="form-control" id="id_correo" name="correo" 
+                                   placeholder="tu@ejemplo.com" value="{{ form.correo.value|default:'' }}" 
+                                   required autocomplete="email">
+                            {% if form.correo.errors %}
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ form.correo.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
 
-            <!-- Enlaces adicionales 
-            <div class="login-links">
-                <a href="#" class="login-link">
-                    ¿Olvidaste tu contraseña?
-                </a>
-                -->
-                <br>
-                <small style="color: #DFAEA1;">
-                    ¿No tienes cuenta? <a href="{% url 'registrar' %}" class="login-link"
-                        style="font-weight: 600;">Regístrate aquí</a>
-                </small>
+                        <!-- Contraseña -->
+                        <div class="form-group">
+                            <label for="id_contrasenia" class="form-label">
+                                <i class="bi bi-key"></i>
+                                Contraseña
+                            </label>
+                            <div class="password-field">
+                                <input type="password" class="form-control" id="id_contrasenia" name="contrasenia"
+                                       placeholder="Ingresa tu contraseña" required autocomplete="current-password">
+                                <button type="button" class="password-toggle" onclick="togglePassword('id_contrasenia')">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            {% if form.contrasenia.errors %}
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {{ form.contrasenia.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Recordar sesión -->
+                        <div class="form-group form-full-width">
+                            <div class="remember-me">
+                                <input type="checkbox" id="rememberMe" name="remember_me" class="form-check-input">
+                                <label for="rememberMe" class="form-check-label">
+                                    <i class="bi bi-check-circle me-1"></i>
+                                    Recordar mi sesión
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn-login" type="submit">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>
+                            Iniciar Sesión
+                        </button>
+
+                        <div class="register-link">
+                            <small>
+                                ¿No tienes cuenta? 
+                                <a href="{% url 'registrar' %}">Regístrate aquí</a>
+                            </small>
+                        </div>
+                    </div>
+                </form>
             </div>
-            
-        </form>
+        </div>
     </div>
 </div>
 
-<!-- Script para mostrar/ocultar contraseña -->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const toggleButtons = document.querySelectorAll('.password-toggle');
+    // Función para mostrar/ocultar contraseña
+    function togglePassword(inputId) {
+        const input = document.getElementById(inputId);
+        const toggleButton = input.parentNode.querySelector('.password-toggle');
+        const icon = toggleButton.querySelector('i');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        }
+    }
 
-        toggleButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const passwordInput = this.previousElementSibling;
-                const icon = this.querySelector('i');
-
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    icon.classList.remove('bi-eye');
-                    icon.classList.add('bi-eye-slash');
-                } else {
-                    passwordInput.type = 'password';
-                    icon.classList.remove('bi-eye-slash');
-                    icon.classList.add('bi-eye');
-                }
-            });
-        });
+    // Enfocar el primer campo al cargar
+    document.addEventListener('DOMContentLoaded', function() {
+        const correoInput = document.getElementById('id_correo');
+        if (correoInput) {
+            correoInput.focus();
+        }
+        
     });
 </script>
 {% endblock %}
