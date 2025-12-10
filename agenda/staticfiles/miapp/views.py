@@ -89,7 +89,7 @@ def crear_estatus_inicial():
 
     for data in estatus_data:
         Estatu.objects.get_or_create(**data)
-    print("📋 Estatus iniciales verificados/creados")
+    print("Estatus iniciales verificados/creados")
 
 
 def listar_tareas(request):
