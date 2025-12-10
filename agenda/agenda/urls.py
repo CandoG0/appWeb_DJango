@@ -10,9 +10,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('miapp/', include('miapp.urls')),
     
-    # SOLUCIÓN: Redirigir la raíz al login
     path('', RedirectView.as_view(url='/login/'), name='home'),
-    path('', include('home.urls')),  # Mantener esta línea para otras rutas de home
+    path('', include('home.urls')),
 ]
 
 if settings.DEBUG:
