@@ -4,7 +4,7 @@
     left: 320px;
     font-size: 1.5rem;
     font-weight: 600;
-    color: #FFFCF5;
+    color: #374375;
     margin: 0;
     z-index: 100;
     display: flex;
@@ -19,7 +19,7 @@
 }
 
 .back-arrow {
-    color: #FFFCF5;
+    color: #374375;
     text-decoration: none;
     font-size: 1.3rem;
     transition: all 0.3s ease;
@@ -43,7 +43,7 @@
 }
 
 .nav-link {
-    color: #FFFCF5 !important;
+    color: #252d4e   !important;
     /* Color más suave por defecto */
     font-weight: 500;
     padding: 0.5rem 1rem;
@@ -55,8 +55,6 @@
 .nav-link:focus {
     color: #895159 !important;
     /* Color al hover */
-    background-color: rgba(223, 174, 161, 0.1);
-    /* Fondo sutil al hover */
 }
 
 .nav-link.active {

@@ -4,7 +4,7 @@
     left: 320px;
     font-size: 1.5rem;
     font-weight: 600;
-    color: #FFFCF5;
+    color: #374375;
     margin: 0;
     z-index: 100;
     display: flex;
@@ -18,7 +18,7 @@
 }
 
 .back-arrow {
-    color: #FFFCF5;
+    color: #374375;
     text-decoration: none;
     font-size: 1.3rem;
     transition: all 0.3s ease;
