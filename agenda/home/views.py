@@ -7,6 +7,7 @@ from django.utils import timezone
 from datetime import timedelta
 
 # Create your views here.
+ # Aqui se establece el rendizado de vistas ademas de la logica de cada una de ellas
 def index(request):
     # Verificar que el usuario esté logueado
     if "usuario_id" not in request.session:

@@ -10,7 +10,8 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 
 # Create your views here.
-
+# Los modelos son las estructuras que tendran nuestras tablas en la base de datos ademas de sus respectivas relaciones
+# Estos también tinen funciones de mucha utilidad que seran utilizadas en las vistas
 
 # Cargar vista para el formulario de tareas
 def crear_tarea(request):
@@ -338,7 +339,7 @@ def editar_tarea(request, tarea_id):
             else:
                 messages.error(request, "Por favor selecciona una fecha válida.")
 
-        # Redirigir de vuelta al detalle (el modal se maneja en el frontend)
+        # Redirigir de vuelta al detalle
         return redirect("miapp:detalle_tarea", tarea_id=tarea_id)
 
     except Tarea.DoesNotExist:
@@ -413,7 +414,7 @@ def actualizar_estado(request, tarea_id):
             tarea.estatus = nuevo_estado
             tarea.save()
 
-            # GUARDAR COMENTARIO SI EXISTE - ¡CORREGIDO!
+            # Guardar comentario si existe
             if (
                 comentario
             ): 

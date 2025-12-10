@@ -3,7 +3,8 @@ from .models import Usuario, Tarea
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-
+# Formularios que se utilizan para enviar registros a la base de datos
+# Cada formulario puede tener una que otra funcion de utilidad
 class UsuarioRegistroForm(forms.ModelForm):
     confirmar_contrasenia = forms.CharField(
         max_length=128,

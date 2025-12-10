@@ -1,3 +1,4 @@
+/* Encabezado fijo */
 .section-title {
     position: fixed;
     top: 2rem;
@@ -34,7 +35,6 @@
 
 .hero-section {
     margin-top: 50px;
-    /* Espacio para el título fijo */
 }
 
 /* Barra de navegacion mejorada */
@@ -44,7 +44,6 @@
 
 .nav-link {
     color: #252d4e   !important;
-    /* Color más suave por defecto */
     font-weight: 500;
     padding: 0.5rem 1rem;
     /* border-radius: 0.375rem; */
@@ -54,7 +53,6 @@
 .nav-link:hover,
 .nav-link:focus {
     color: #895159 !important;
-    /* Color al hover */
 }
 
 .nav-link.active {

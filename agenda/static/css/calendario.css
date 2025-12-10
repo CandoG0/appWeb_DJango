@@ -1,3 +1,4 @@
+/* Encabezado fijo */
 .section-title {
     position: fixed;
     top: 2rem;
@@ -54,7 +55,7 @@
     min-width: 200px;
 }
 
-/* Botones de navegación - Solo flechas */
+/* Botones de navegación */
 .nav-btn {
     background: transparent;
     border: none;
@@ -76,7 +77,6 @@
     transition: all 0.3s ease;
 }
 
-/* Efecto hover sutil */
 .nav-btn:hover {
     color: #895159;
 }
@@ -85,7 +85,6 @@
     transform: scale(1.2);
 }
 
-/* Efecto activo/presionado */
 .nav-btn:active i {
     transform: scale(0.9);
 }
@@ -137,7 +136,7 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-/* Colores de eventos según estado (usando paleta) */
+/* Colores de eventos según estado */
 .evento-nuevo {
     background-color: #D5D8F0 !important; 
     color: #374375 !important;
@@ -320,7 +319,7 @@
     margin-bottom: 0.25rem;
 }
 
-/* Espaciado mejorado */
+/* Espaciado */
 .mb-2 {
     margin-bottom: 0.5rem !important;
 }

@@ -2,8 +2,10 @@ from django.db import models
 from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Q
-# Create your models here.
 
+# Create your models here.
+# Los modelos son las estructuras que tendran nuestras tablas en la base de datos ademas de sus respectivas relaciones
+# Estos también tinen funciones de mucha utilidad que seran utilizadas en las vistas
 class Estatu(models.Model):
     ESTATUS = [
         ('nue', 'Nuevo'),

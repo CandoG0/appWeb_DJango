@@ -1,4 +1,4 @@
-/* Estilo para el título de sección - POSICIÓN FIJA */
+/* Encabezado fijo */
 .section-title {
     position: fixed;
     top: 2rem;
@@ -18,7 +18,7 @@
     transform: translateY(-100px);
 }
 
-/* Notificación - POSICIONADA DEBAJO DEL TÍTULO */
+/* Notificación */
 .alert-notification {
     position: fixed;
     top: 5.5rem; /* 80px desde el top - espacio después del título */
@@ -48,7 +48,7 @@
     }
 }
 
-/* Contenido principal - EMPIEZA DESPUÉS DE LA NOTIFICACIÓN */
+/* Contenido principal */
 .hero-section {
     margin-top: 180px; /* Espacio fijo para título + notificación */
     text-align: center;
@@ -89,7 +89,7 @@
     flex-wrap: wrap;
 }
 
-/* Botones usando tu paleta */
+/* Botones */
 .btn-primary-custom {
     background: linear-gradient(135deg, #895159 0%, #6a3f46 100%);
     color: #FFFCF5;
@@ -158,7 +158,7 @@
     margin: 0 0.2rem;
 }
 
-/* Colores usando paleta */
+/* Colores en alerts */
 .alert-highlight.alert-danger {
     color: #895159;
 }
